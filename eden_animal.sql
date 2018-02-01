@@ -11,6 +11,4 @@ INSERT INTO `items` (name, label) VALUES
 ;
 
 ALTER TABLE `users`
-  ADD `animal` VARCHAR(50) NULL DEFAULT '',
-
-;
+ADD COLUMN `animal` VARCHAR(50) NULL;
