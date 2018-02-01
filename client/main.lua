@@ -544,20 +544,18 @@ function buy_animal()
 		local price = price
 		local elements = {}
 		            
-		table.insert(elements, {label = 'Chien - <span style="color:green;">$5000</span>',             					value = "chien",	price = 50000})
-		
-		table.insert(elements, {label = 'Chat - <span style="color:green;">$5000</span>',             					value = "chat", price = 15000})
-
-		table.insert(elements, {label = 'Singe - <span style="color:green;">$10000</span>',             					value = "singe", price = 8000})
-		table.insert(elements, {label = 'Loup - <span style="color:green;">$50000</span>',             					value = "loup", price = 30000})
-		table.insert(elements, {label = 'Lapin - <span style="color:green;">$5000</span>',             					value = "lapin",	price = 25000})
-		table.insert(elements, {label = 'Husky - <span style="color:green;">$5000</span>',             					value = "husky", price = 35000})
+		table.insert(elements, {label = 'Chien - <span style="color:green;">$50000</span>',             					value = "chien",	price = 50000})		
+		table.insert(elements, {label = 'Chat - <span style="color:green;">$15000</span>',             					value = "chat", price = 15000})
+		table.insert(elements, {label = 'Singe - <span style="color:green;">$8000</span>',             					value = "singe", price = 8000})
+		table.insert(elements, {label = 'Loup - <span style="color:green;">$30000</span>',             					value = "loup", price = 30000})
+		table.insert(elements, {label = 'Lapin - <span style="color:green;">$25000</span>',             					value = "lapin",	price = 25000})
+		table.insert(elements, {label = 'Husky - <span style="color:green;">$35000</span>',             					value = "husky", price = 35000})
 		table.insert(elements, {label = 'Cochon - <span style="color:green;">$10000</span>',             					value = "cochon", price = 10000})
 		table.insert(elements, {label = 'Caniche - <span style="color:green;">$50000</span>',             					value = "caniche", price = 50000})
 		table.insert(elements, {label = 'Carlin - <span style="color:green;">$5000</span>',             					value = "carlin", price = 5000})
 		table.insert(elements, {label = 'Retriever - <span style="color:green;">$10000</span>',             					value = "retriever", price = 10000})
-		table.insert(elements, {label = 'Berger Allemand- <span style="color:green;">$50000</span>',             					value = "berger", price = 55000})
-		table.insert(elements, {label = 'Westie - <span style="color:green;">$50000</span>',             					value = "westie", price = 50000})
+		table.insert(elements, {label = 'Berger Allemand- <span style="color:green;">$55000</span>',             					value = "berger", price = 55000})
+		table.insert(elements, {label = 'Westie - <span style="color:green;">$50000</span>',             					value = "westie", price = 50000})      					value = "westie", price = 50000})
 		
 					
 		ESX.UI.Menu.Open(
