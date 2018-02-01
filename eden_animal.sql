@@ -7,7 +7,7 @@ INSERT INTO `shops` (name, item, price) VALUES
 ;
 
 INSERT INTO `items` (name, label) VALUES 
-	('croquettes', 'Croquettes'),
+	('croquettes', 'Croquettes')
 ;
 
 ALTER TABLE `users`
