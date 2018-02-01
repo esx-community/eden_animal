@@ -555,7 +555,7 @@ function buy_animal()
 		table.insert(elements, {label = 'Carlin - <span style="color:green;">$5000</span>',             					value = "carlin", price = 5000})
 		table.insert(elements, {label = 'Retriever - <span style="color:green;">$10000</span>',             					value = "retriever", price = 10000})
 		table.insert(elements, {label = 'Berger Allemand- <span style="color:green;">$55000</span>',             					value = "berger", price = 55000})
-		table.insert(elements, {label = 'Westie - <span style="color:green;">$50000</span>',             					value = "westie", price = 50000})      					value = "westie", price = 50000})
+		table.insert(elements, {label = 'Westie - <span style="color:green;">$50000</span>',             					value = "westie", price = 50000})
 		
 					
 		ESX.UI.Menu.Open(
@@ -575,5 +575,3 @@ function buy_animal()
 		end)
 	
 end
-
-
