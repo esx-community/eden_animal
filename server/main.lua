@@ -26,24 +26,19 @@ AddEventHandler("eden_animal:dead", function()
 		{
 			['@identifier']    = xPlayer.identifier
 		}
-	)
-        
+	)     
 end)
 
 RegisterServerEvent('eden_animal:startHarvest')
 AddEventHandler('eden_animal:startHarvest', function()
 	local _source = source
-	 local xPlayer        = ESX.GetPlayerFromId(_source)
+	local xPlayer        = ESX.GetPlayerFromId(_source)
 		xPlayer.removeInventoryItem('croquettes', 1)
 
 end)
 
-
-
-
 RegisterServerEvent('eden_animal:takeanimal')
 AddEventHandler('eden_animal:takeanimal',function(animalname, price)
-
 
 	local _source = source
 	local xPlayer  = ESX.GetPlayerFromId(source)
@@ -58,14 +53,11 @@ AddEventHandler('eden_animal:takeanimal',function(animalname, price)
 					['@animalname']    = animalname
 				}
 			)
-			TriggerClientEvent('esx:showNotification', _source, ('Vous venez d\'acheter un ' .. animalname .. ' pour ' .. price))
+			TriggerClientEvent('esx:showNotification', _source, (_U('youbought') .. animalname .. _U('for') .. price))
 
 		else
-			TriggerClientEvent('esx:showNotification', _source, ('Vous etes trop pauvre'))
+			TriggerClientEvent('esx:showNotification', _source, _U('yourpoor'))
 		end
 
-
-	
 end)
-
 

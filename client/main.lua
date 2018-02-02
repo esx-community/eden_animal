@@ -43,23 +43,23 @@ function OpenAnimal()
         }
  
         if come == 1 then
-            table.insert(elements, {label = ('Taux de faim :' .. status .. '%')})
-            table.insert(elements, {label = ('Donner a manger'), value = 'graille'})
-           
-            table.insert(elements, {label = ('Attacher / détacher l\'animal'), value = 'attached_animal'})
+            table.insert(elements, {label = _U('hunger') .. status .. '%', value = nil})
+            table.insert(elements, {label = _U('givefood'), value = 'graille'})
+            table.insert(elements, {label = _U('attachpet'), value = 'attached_animal'})
             if isInVehicle then
-            table.insert(elements, {label = ('Faire descendre du vehicule'), value = 'vehicules'})
+            table.insert(elements, {label = _U('getpeddown'), value = 'vehicules'})
             else
-            table.insert(elements, {label = ('Faire monter dans le vehicule'), value = 'vehicules'})
+            table.insert(elements, {label = _U('getpedinside'), value = 'vehicules'})
             end
            
                if ordre then
-				table.insert(elements, {label = ('Donner des ordres'), value = 'ordres'})
+				table.insert(elements, {label = _U('giveorders'), value = 'ordres'})
 				end
-				
+			table.insert(elements, {label = _U('doghouse'), value = 'niche'})
+
  
         else
-            table.insert(elements, {label = ('Faire venir l\'animal'), value = 'come_animal'})
+            table.insert(elements, {label = _U('callpet'), value = 'come_animal'})
         end
  
        
@@ -68,7 +68,7 @@ function OpenAnimal()
     ESX.UI.Menu.Open(
         'default', GetCurrentResourceName(), 'eden_animal',
         {
-            title    = 'Gestion animal',
+            title    = _U('pet_management'),
             align    = 'top-left',
             elements = elements,
            
@@ -153,8 +153,8 @@ function OpenAnimal()
 		                detached()
 		                isAttached = false
 	                end
-           		else   
-                    TriggerEvent('esx:showNotification', 'On attache pas un animal dans un vehicule !')
+                   else   
+                    ESX.showNotification(_U('dontattachhiminacar'))
                 end
             end
             if data.current.value == 'ordres' then              
@@ -176,24 +176,25 @@ function OpenAnimal()
                         if count >= 1 then
                             if status < 100 then
                             status = status + math.random(2, 15)
-                            TriggerEvent('esx:showNotification', 'Vous venez de nourrir votre animal.')
+                            ESX.showNotification(_U('gavepetfood'))
                             TriggerServerEvent('eden_animal:startHarvest')
                                 if status > 100 then
                                     status = 100
                                 end
                             menu.close()
                             else
-                                                        TriggerEvent('esx:showNotification', 'Votre animal n\'a plus faim.')
+                                ESX.showNotification(_U('nomorehunger'))
                             end
  
                         else
-                            TriggerEvent('esx:showNotification', 'Vous n\'avez pas de croquettes, allez en acheter.')
+                            ESX.showNotification(_U('donthavefood'))
                         end
                     else
-                            TriggerEvent('esx:showNotification', 'Vous êtes trop loin de votre animal !')
+                        ESX.showNotification(_U('hestoofar'))
                     end
             end
-            if data.current.value == 'vehicules' then
+			
+			if data.current.value == 'vehicules' then
                 local coords    = GetEntityCoords(GetPlayerPed(-1))
                 local vehicle = GetVehiclePedIsUsing(GetPlayerPed(-1))
                 local coords2 = GetEntityCoords(ped)
@@ -203,16 +204,25 @@ function OpenAnimal()
 							if distance < 8 then
 							attached ()
 							Wait(200)
+							if IsVehicleSeatFree(vehicle, 1) then
+									SetPedIntoVehicle(ped, vehicle, 1)
+									isInVehicle = true
+							elseif IsVehicleSeatFree(vehicle, 2) then
+									isInVehicle = true
+									SetPedIntoVehicle(ped, vehicle, 2)
+							elseif IsVehicleSeatFree(vehicle, 0) then
+									isInVehicle = true
+									SetPedIntoVehicle(ped, vehicle, 0)
+							end 
+								
 							TaskWarpPedIntoVehicle(ped,  vehicle,  -2)
-							isInVehicle = true
 							 menu.close()
 							 else
-							 TriggerEvent('esx:showNotification', 'Votre animal est trop loin du vehicule.')
+							 ESX.showNotification(_U('toofarfromcar'))
 							 end
 
 						 else
-                        TriggerEvent('esx:showNotification', 'Vous devez être dans un vehicule !')
-						
+							ESX.showNotification(_U('youneedtobeincar'))						
                     end
                 else
                     if not IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then    
@@ -222,21 +232,34 @@ function OpenAnimal()
 	                     isInVehicle = false
 						 						 menu.close()
                     else
-                        TriggerEvent('esx:showNotification', 'Vous êtes toujours dans votre vehicule !')
-                    end
+					ESX.showNotification(_U('yourstillinacar'))    
+					end
                 end
 				
-            end        
-        end,
+            end 
+			
+            
+			if data.current.value == 'niche' then   
+			
+				local GroupHandle = GetPlayerGroup(PlayerId())
+				local coords    = GetEntityCoords(GetPlayerPed(-1))
+				SetGroupSeparationRange(GroupHandle, 1.9)
+				SetPedNeverLeavesGroup(ped, false)
+				TaskGoToCoordAnyMeans(ped, coords.x+40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
+				Wait(5000)
+				DeleteEntity(ped)
+				come = 0
+                menu.close()
+				
+            end
+	   end,
         function(data, menu)  
             menu.close()
         end
     )
 end
-   
-   
- 
-   
+
+
 local inanimation = false
 function ordres()
  ESX.TriggerServerCallback('eden_animal:animalname', function(data)
@@ -245,23 +268,23 @@ function ordres()
  
         if not inanimation then
 			if (data == "chien") then
-					table.insert(elements, {label = ('Assis'), value = 'assis'})
-					table.insert(elements, {label = ('Coucher'), value = 'coucher'})
+					table.insert(elements, {label = _U('sitdown'), value = 'assis'})
+					table.insert(elements, {label = _U('getdown'), value = 'coucher'})
 			end
 			if (data == "chat") then
-					table.insert(elements, {label = ('Coucher'), value = 'coucher2'})
+					table.insert(elements, {label = _U('getdown'), value = 'coucher2'})
 			end			
 			if (data == "loup") then
-					table.insert(elements, {label = ('Coucher'), value = 'coucher3'})
+					table.insert(elements, {label = _U('getdown'), value = 'coucher3'})
 			end							
 			if (data == "carlin") then
-					table.insert(elements, {label = ('Assis'), value = 'assis2'})	
+					table.insert(elements, {label = _U('sitdown'), value = 'assis2'})	
 			end
 			if (data == "retriever") then
-					table.insert(elements, {label = ('Assis'), value = 'assis3'})	
+					table.insert(elements, {label = _U('sitdown'), value = 'assis3'})	
 			end
 				else   
-					table.insert(elements, {label = ('Debout'), value = 'debout'})
+					table.insert(elements, {label = _U('getup'), value = 'debout'})
         end
          
  
@@ -271,13 +294,14 @@ function ordres()
     ESX.UI.Menu.Open(
         'default', GetCurrentResourceName(), 'ordres',
         {
-            title    = 'Ordres animaux',
+            title    = _U('pet_orders'),
             align    = 'top-left',
             elements = elements,
            
         },
         function(data, menu)
-		
+
+					
 					if data.current.value == 'assis' then							-- [chien ]
 							RequestAnimDict('creatures@rottweiler@amb@world_dog_sitting@base')
 							while not HasAnimDictLoaded('creatures@rottweiler@amb@world_dog_sitting@base') do
@@ -347,6 +371,10 @@ function ordres()
     )
 	end) 
 end          
+
+
+
+
 
 
 function attached ()
@@ -444,18 +472,16 @@ function openchien ()
         end
         TaskPlayAnim( GetPlayerPed(-1), 'rcmnigel1c', 'hailing_whistle_waive_a' ,8.0, -8, -1, 120, 0, false, false, false )
    		SetTimeout(5000, function() -- 5 secondes
-        ped = CreatePed(28, model, LastPosition.x, LastPosition.y, LastPosition.z, 1, 1)                   
+        ped = CreatePed(28, model, LastPosition.x +1, LastPosition.y +1, LastPosition.z -1, 1, 1)                   
         SetPedAsGroupLeader(playerPed, GroupHandle)
         SetPedAsGroupMember(ped, GroupHandle)
         SetPedNeverLeavesGroup(ped, true)               
-        SetEntityInvincible(ped, true)
         SetPedCanBeTargetted(ped, false)          
         SetEntityAsMissionEntity(ped, true,true)    
         status = math.random(40, 90)      
     end)
 end
  
-
  
 Citizen.CreateThread(function()
     while true do      
@@ -464,9 +490,9 @@ Citizen.CreateThread(function()
             status = status - 1
         end
         if status == 0 then
-             -- TriggerServerEvent('eden_animal:dead')
-            --DeleteEntity(ped)
-            TriggerEvent('esx:showNotification', 'Votre animal vient de mourrir de faim.')
+            TriggerServerEvent('eden_animal:dead')
+            DeleteEntity(ped)
+            ESX.showNotification(_U('pet_dead'))
             come = 3
             status = "die"
         end
@@ -477,59 +503,39 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-		if IsControlPressed(0,  Keys['F7']) and PlayerData.job ~= nil and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'eden_animal') and (GetGameTimer() - GUI.Time) > 150 then
+		if IsControlPressed(0, Keys['F7']) and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'eden_animal') and (GetGameTimer() - GUI.Time) > 150 then
             OpenAnimal()
             GUI.Time = GetGameTimer()
         end
     end
 end)
 
-
-
-
-
-
-
-
-
--- ANIMALERIE
-
-
-local spawnpoint = {
-{x = 562.19805908203,y = 2741.3090820313,z = 41.868915557861 },
-}
-
-
---BLIP
+-- Create Blips
 Citizen.CreateThread(function()
-	for i = 1 , #spawnpoint, 1 do		
-		local blip = AddBlipForCoord(spawnpoint[i].x,spawnpoint[i].y,spawnpoint[i].z)
-		SetBlipSprite (blip, 463)
-		SetBlipDisplay(blip, 4)
-		SetBlipScale  (blip, 1.0)
-		SetBlipColour (blip, 63)
-		SetBlipAsShortRange(blip, true)
-		BeginTextCommandSetBlipName("STRING")
-		AddTextComponentString("Animalerie")
-		EndTextCommandSetBlipName(blip)
-	end
-end)
+
+    local blip = AddBlipForCoord(Config.Zones.PetShop.Pos.x, Config.Zones.PetShop.Pos.y, Config.Zones.PetShop.Pos.z)
+  
+    SetBlipSprite (blip, Config.Zones.PetShop.Sprite)
+    SetBlipDisplay(blip, Config.Zones.PetShop.Display)
+    SetBlipScale  (blip, Config.Zones.PetShop.Scale)
+    SetBlipAsShortRange(blip, true)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentString(_U('pet_shop'))
+    EndTextCommandSetBlipName(blip)
+  
+  end)
 
 
 Citizen.CreateThread(function()
 	while true do
 		Wait(0)
-		
-		for i = 1 , #spawnpoint ,1 do
 			local coord = GetEntityCoords(GetPlayerPed(-1), true)
-			if GetDistanceBetweenCoords(coord, spawnpoint[i].x,spawnpoint[i].y,spawnpoint[i].z, false) < 5 then
-					DisplayHelpText("Appuyez sur ~INPUT_CONTEXT~ pour acceder a l'animalerie.")
+			if GetDistanceBetweenCoords(coord, Config.Zones.PetShop.Pos.x,Config.Zones.PetShop.Pos.y,Config.Zones.PetShop.Pos.z, false) < 5 then
+					DisplayHelpText(_U('enterkey'))
 					if IsControlJustPressed(0, Keys['E'])  then
 						buy_animal()
 					end	
 			end
-		end
-
 	end
 end)
 --function
@@ -540,38 +546,33 @@ function DisplayHelpText(str)
 end
 
 function buy_animal()
-		local value = value
-		local price = price
-		local elements = {}
-		            
-		table.insert(elements, {label = 'Chien - <span style="color:green;">$50000</span>',             					value = "chien",	price = 50000})		
-		table.insert(elements, {label = 'Chat - <span style="color:green;">$15000</span>',             					value = "chat", price = 15000})
-		table.insert(elements, {label = 'Singe - <span style="color:green;">$8000</span>',             					value = "singe", price = 8000})
-		table.insert(elements, {label = 'Loup - <span style="color:green;">$30000</span>',             					value = "loup", price = 30000})
-		table.insert(elements, {label = 'Lapin - <span style="color:green;">$25000</span>',             					value = "lapin",	price = 25000})
-		table.insert(elements, {label = 'Husky - <span style="color:green;">$35000</span>',             					value = "husky", price = 35000})
-		table.insert(elements, {label = 'Cochon - <span style="color:green;">$10000</span>',             					value = "cochon", price = 10000})
-		table.insert(elements, {label = 'Caniche - <span style="color:green;">$50000</span>',             					value = "caniche", price = 50000})
-		table.insert(elements, {label = 'Carlin - <span style="color:green;">$5000</span>',             					value = "carlin", price = 5000})
-		table.insert(elements, {label = 'Retriever - <span style="color:green;">$10000</span>',             					value = "retriever", price = 10000})
-		table.insert(elements, {label = 'Berger Allemand- <span style="color:green;">$55000</span>',             					value = "berger", price = 55000})
-		table.insert(elements, {label = 'Westie - <span style="color:green;">$50000</span>',             					value = "westie", price = 50000})
-		
-					
-		ESX.UI.Menu.Open(
-	    'default', GetCurrentResourceName(), 'animalerie',
-	    {
-		    title    = 'Animalerie',
-		    align 	 = 'top-left',
-			elements = elements
-	    },
-		function(data, menu)
-			TriggerServerEvent('eden_animal:takeanimal', data.current.value, data.current.price)
-			
-			menu.close()
-		end,
-		function(data, menu)
-			menu.close()
-		end)
-	
+    local value = value
+    local price = price
+    local elements = {}
+    table.insert(elements, {label = _U('dog') .. '- <span style="color:green;">$50000</span>',             					value = "chien",	price = 50000})		
+    table.insert(elements, {label = _U('cat') .. '- <span style="color:green;">$15000</span>',             					value = "chat", price = 15000})
+    table.insert(elements, {label = _U('monkey') .. '- <span style="color:green;">$8000</span>',             					value = "singe", price = 8000})
+    table.insert(elements, {label = _U('wolf') .. '- <span style="color:green;">$30000</span>',             					value = "loup", price = 30000})
+    table.insert(elements, {label = _U('bunny') .. '- <span style="color:green;">$25000</span>',             					value = "lapin",	price = 25000})
+    table.insert(elements, {label = _U('husky') .. '- <span style="color:green;">$35000</span>',             					value = "husky", price = 35000})
+    table.insert(elements, {label = _U('pig') .. '- <span style="color:green;">$10000</span>',             					value = "cochon", price = 10000})
+    table.insert(elements, {label = _U('poodle') .. '- <span style="color:green;">$50000</span>',             					value = "caniche", price = 50000})
+    table.insert(elements, {label = _U('pug') .. '- <span style="color:green;">$5000</span>',             					value = "carlin", price = 5000})
+    table.insert(elements, {label = _U('retriever') .. '- <span style="color:green;">$10000</span>',             					value = "retriever", price = 10000})
+    table.insert(elements, {label = _U('asatian') .. '- <span style="color:green;">$55000</span>',             					value = "berger", price = 55000})
+    table.insert(elements, {label = _U('westie') .. '- <span style="color:green;">$50000</span>',             					value = "westie", price = 50000})
+    
+    ESX.UI.Menu.Open(
+    'default', GetCurrentResourceName(), 'animalerie',
+    {
+        title    = _U('pet_shop2'),
+        align 	 = 'top-left',
+        elements = elements
+    },
+    function(data, menu)
+       
+            TriggerServerEvent('eden_animal:takeanimal', data.current.value, data.current.price)
+            menu.close()
+
+    end)
 end
