@@ -2,7 +2,7 @@ Locales['en'] = {
   ['hunger'] = 'Hunger :',
   ['givefood'] = 'Give food',
   ['attachpet'] = 'Attach or detach your pet',
-  ['getpetdown'] = 'Tell your ped to go outside of the car',
+  ['getpeddown'] = 'Tell your ped to go outside of the car',
   ['getpedinside'] = 'Tell your pet to go in the car',
   ['giveorders'] = 'Give an order',
   ['callpet'] = 'Call your pet',
@@ -23,7 +23,6 @@ Locales['en'] = {
   ['enterkey'] = 'Press ~INPUT_CONTEXT~ for openning pet shop.',
   ['dog'] = 'Dog ',
   ['cat'] = 'Cat ',
-  ['monkey'] = 'Monkey ',
   ['wolf'] = 'Wolf ',
   ['bunny'] = 'Bunny ',
   ['husky'] = 'Husky ',
@@ -40,7 +39,9 @@ Locales['en'] = {
     ['doghouse'] = 'Tell your ped to go in doghouse',
    ['buy_croquette'] = 'you have buy dog food ~g~',
 ['buy_croquettec'] = 'Buy dog food',
-
+['balle'] = 'Fetch the ball',
+['pied'] = 'Go at my feet',
+['noball'] = 'No balls',
   -- Blip name
   ['pet_shop'] = 'Pet shop',
 }

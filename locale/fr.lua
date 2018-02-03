@@ -3,7 +3,7 @@ Locales['fr'] = {
   ['givefood'] = 'Donner de la nourriture',
   ['attachpet'] = 'Attacher / détacher votre animal',
   ['getpetdown'] = 'Faire descendre votre animal dans le véhicule',
-  ['getpetinside'] = 'Faire monter votre animal dans le véhicule',
+  ['getpedinside'] = 'Faire monter votre animal dans le véhicule',
   ['giveorders'] = 'Donner un ordre',
   ['callpet'] = 'Appeller votre animal',
   ['pet_management'] = 'Gestion de l\'animal',
@@ -23,7 +23,6 @@ Locales['fr'] = {
   ['enterkey'] = 'Appuyez sur ~INPUT_CONTEXT~ pour acceder a l\'animalerie.',
   ['dog'] = 'Chien ',
   ['cat'] = 'Chat ',
-  ['monkey'] = 'Singe ',
   ['wolf'] = 'Loup ',
   ['bunny'] = 'Lapin ',
   ['husky'] = 'Husky ',
@@ -40,6 +39,11 @@ Locales['fr'] = {
   ['doghouse'] = 'Mettre dans la niche',
    ['buy_croquette'] = 'Vous venez d\'acheter des corquettes pour ~g~',
 ['buy_croquettec'] = 'Acheter des croquettes',
+['balle'] = 'Aller chercher la balle',
+['pied'] = 'Venir au pied',
+['noball'] = 'Y\'a pas de balles',
+
+
   -- BLIP NAME
   ['pet_shop'] = 'Animalerie',
 }

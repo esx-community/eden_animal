@@ -30,7 +30,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
   PlayerData = xPlayer
 end)
  
-local ordre = false
 local come = 0
 local isAttached = false
 local animation = {}
@@ -52,10 +51,9 @@ function OpenAnimal()
             table.insert(elements, {label = _U('getpedinside'), value = 'vehicules'})
             end
            
-               if ordre then
-				table.insert(elements, {label = _U('giveorders'), value = 'ordres'})
-				end
-			table.insert(elements, {label = _U('doghouse'), value = 'niche'})
+               
+			table.insert(elements, {label = _U('giveorders'), value = 'ordres'})
+				
 
  
         else
@@ -81,28 +79,19 @@ function OpenAnimal()
                 ESX.TriggerServerCallback('eden_animal:animalname', function(data)
                     if (data == "chien") then
                     	model = -1788665315
-						come = 1
-						ordre = true
+						come = 1						
                   		openchien()
                     elseif (data == "chat") then
 	                    model = 1462895032
-	                    come = 1
-						ordre = true
-	                    openchien()
-                    elseif (data == "singe") then
-	                    model = -1469565163
-						ordre = false
-	                    come = 1
+	                    come = 1				
 	                    openchien()
                     elseif (data == "loup") then
 	                    model = 1682622302
-	                    come = 1
-						ordre = true						
+	                    come = 1											
 	                    openchien()
                     elseif (data == "lapin") then
 	                    model = -541762431
-	                    come = 1
-						ordre = false						
+	                    come = 1										
 	                    openchien()
                     elseif (data == "husky") then
 	                    model = 1318032802
@@ -110,33 +99,27 @@ function OpenAnimal()
 	                    openchien()	                  
                     elseif (data == "cochon") then
 	                    model = -1323586730
-	                    come = 1	
-						ordre = false						
+	                    come = 1													
 	                    openchien()
                     elseif (data == "caniche") then
 	                    model = 1125994524
-	                    come = 1
-						ordre = false
+	                    come = 1						
 	                    openchien()
                     elseif (data == "carlin") then
 	                    model = 1832265812
-						come = 1
-						ordre = true
+						come = 1						
 	                    openchien()
                     elseif (data == "retriever") then
 	                    model = 882848737
-	                    come = 1
-						ordre = true
+	                    come = 1					
 	                    openchien()
                     elseif (data == "berger") then
 	                    model = 1126154828
-	                    come = 1
-						ordre = false
+	                    come = 1						
 	                    openchien()
                     elseif (data == "westie") then
 	                    model = -1384627013
-	                    come = 1	
-						ordre = false						
+	                    come = 1													
 	                    openchien()
                     end
                
@@ -154,7 +137,7 @@ function OpenAnimal()
 		                isAttached = false
 	                end
                    else   
-                    ESX.showNotification(_U('dontattachhiminacar'))
+                    ESX.ShowNotification(_U('dontattachhiminacar'))
                 end
             end
             if data.current.value == 'ordres' then              
@@ -176,21 +159,21 @@ function OpenAnimal()
                         if count >= 1 then
                             if status < 100 then
                             status = status + math.random(2, 15)
-                            ESX.showNotification(_U('gavepetfood'))
+                            ESX.ShowNotification(_U('gavepetfood'))
                             TriggerServerEvent('eden_animal:startHarvest')
                                 if status > 100 then
                                     status = 100
                                 end
                             menu.close()
                             else
-                                ESX.showNotification(_U('nomorehunger'))
+                                ESX.ShowNotification(_U('nomorehunger'))
                             end
  
                         else
-                            ESX.showNotification(_U('donthavefood'))
+                            ESX.ShowNotification(_U('donthavefood'))
                         end
                     else
-                        ESX.showNotification(_U('hestoofar'))
+                        ESX.ShowNotification(_U('hestoofar'))
                     end
             end
 			
@@ -215,14 +198,13 @@ function OpenAnimal()
 									SetPedIntoVehicle(ped, vehicle, 0)
 							end 
 								
-							TaskWarpPedIntoVehicle(ped,  vehicle,  -2)
 							 menu.close()
 							 else
-							 ESX.showNotification(_U('toofarfromcar'))
+							 ESX.ShowNotification(_U('toofarfromcar'))
 							 end
 
 						 else
-							ESX.showNotification(_U('youneedtobeincar'))						
+							ESX.ShowNotification(_U('youneedtobeincar'))						
                     end
                 else
                     if not IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then    
@@ -232,26 +214,13 @@ function OpenAnimal()
 	                     isInVehicle = false
 						 						 menu.close()
                     else
-					ESX.showNotification(_U('yourstillinacar'))    
+					ESX.ShowNotification(_U('yourstillinacar'))    
 					end
                 end
 				
             end 
 			
-            
-			if data.current.value == 'niche' then   
-			
-				local GroupHandle = GetPlayerGroup(PlayerId())
-				local coords    = GetEntityCoords(GetPlayerPed(-1))
-				SetGroupSeparationRange(GroupHandle, 1.9)
-				SetPedNeverLeavesGroup(ped, false)
-				TaskGoToCoordAnyMeans(ped, coords.x+40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
-				Wait(5000)
-				DeleteEntity(ped)
-				come = 0
-                menu.close()
-				
-            end
+
 	   end,
         function(data, menu)  
             menu.close()
@@ -259,6 +228,9 @@ function OpenAnimal()
     )
 end
 
+local objCoords = nil
+local balle = false
+local object = {}
 
 local inanimation = false
 function ordres()
@@ -267,7 +239,15 @@ function ordres()
         }
  
         if not inanimation then
+		 if model ~= 1462895032 then
+			table.insert(elements, {label = _U('balle'), value = 'balle'})
+		end
+			table.insert(elements, {label = _U('pied'), value = 'pied'})
+			table.insert(elements, {label = _U('doghouse'), value = 'niche'})
+
+
 			if (data == "chien") then
+
 					table.insert(elements, {label = _U('sitdown'), value = 'assis'})
 					table.insert(elements, {label = _U('getdown'), value = 'coucher'})
 			end
@@ -300,8 +280,47 @@ function ordres()
            
         },
         function(data, menu)
-
+		
+		            
+					if data.current.value == 'niche' then   
 					
+						local GroupHandle = GetPlayerGroup(PlayerId())
+						local coords    = GetEntityCoords(GetPlayerPed(-1))
+						SetGroupSeparationRange(GroupHandle, 1.9)
+						SetPedNeverLeavesGroup(ped, false)
+						TaskGoToCoordAnyMeans(ped, coords.x+40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
+						Wait(5000)
+						DeleteEntity(ped)
+						come = 0
+						menu.close()
+						
+					end
+					
+					if data.current.value == 'pied' then							
+							
+							local coords1 = GetEntityCoords(GetPlayerPed(-1))
+							TaskGoToCoordAnyMeans(ped, coords1.x, coords1.y, coords1.z, 5.0, 0, 0, 786603, 0xbf800000)
+																			
+							menu.close()						
+					end	
+					if data.current.value == 'balle' then							
+							
+												object = GetClosestObjectOfType(GetEntityCoords(ped).x, GetEntityCoords(ped).y, GetEntityCoords(ped).z, 190.0, GetHashKey('w_am_baseball'))
+							
+							if DoesEntityExist(object) then 
+												balle = true
+												objCoords = GetEntityCoords(object)
+												TaskGoToCoordAnyMeans(ped, objCoords.x, objCoords.y, objCoords.z, 5.0, 0, 0, 786603, 0xbf800000)
+												local GroupHandle = GetPlayerGroup(PlayerId())
+												SetGroupSeparationRange(GroupHandle, 1.9)
+												SetPedNeverLeavesGroup(ped, false)
+							else
+												ESX.ShowNotification(_U('noball'))    
+							end
+
+
+							menu.close()						
+					end							
 					if data.current.value == 'assis' then							-- [chien ]
 							RequestAnimDict('creatures@rottweiler@amb@world_dog_sitting@base')
 							while not HasAnimDictLoaded('creatures@rottweiler@amb@world_dog_sitting@base') do
@@ -357,11 +376,11 @@ function ordres()
 									menu.close()   
 					end						
 			
-            if data.current.value == 'debout' then
-                ClearPedTasks(ped)
-                inanimation = false
-                menu.close()
-            end        
+					if data.current.value == 'debout' then
+						ClearPedTasks(ped)
+						inanimation = false
+						menu.close()
+					end        
            
                               
         end,
@@ -371,10 +390,50 @@ function ordres()
     )
 	end) 
 end          
+local getball = false
+Citizen.CreateThread(function()
+    while true do      
+        Wait(30)
+				if balle == true then
+						                local coords1 = GetEntityCoords(GetPlayerPed(-1))
+										local coords2 = GetEntityCoords(ped)
+										local distance = GetDistanceBetweenCoords(objCoords.x, objCoords.y, objCoords.z,coords2.x,coords2.y,coords2.z,true)
+										local distance2 = GetDistanceBetweenCoords(coords1.x,coords1.y,coords1.z,coords2.x,coords2.y,coords2.z,true)
 
+										if distance < 0.5 then
+											AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, 17188), 0.120, 0.010, 0.010, 5.0, 150.0, 0.0, true, true, false, true, 1, true)
+											TaskGoToCoordAnyMeans(ped, coords1.x, coords1.y, coords1.z, 5.0, 0, 0, 786603, 0xbf800000)
+																																			
+											balle = false
+											getball = true
 
+											
+										end
+						
+				end
+				
+				if getball == true then
+											local coords1 = GetEntityCoords(GetPlayerPed(-1))
+											local coords2 = GetEntityCoords(ped)
+											local distance2 = GetDistanceBetweenCoords(coords1.x,coords1.y,coords1.z,coords2.x,coords2.y,coords2.z,true)
 
-
+											if distance2 < 1.5 then
+																											 
+												DetachEntity(object,false,false)	
+												Wait(50)
+												SetEntityAsMissionEntity(object)
+												DeleteEntity(object)
+												GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_BALL"), 1, false, true)
+												local GroupHandle = GetPlayerGroup(PlayerId())                
+												SetGroupSeparationRange(GroupHandle, 999999.9)
+												SetPedNeverLeavesGroup(ped, true)
+												SetPedAsGroupMember(ped, GroupHandle)
+												getball = false
+												
+											end
+				end
+    end
+end)
 
 
 function attached ()
@@ -406,11 +465,6 @@ AddEventHandler('playerSpawned', function()
         -- chat
             RequestModel( 1462895032 )
         while ( not HasModelLoaded( 1462895032 ) ) do
-            Citizen.Wait( 1 )
-        end
-        -- singe
-            RequestModel( -1469565163 )
-        while ( not HasModelLoaded( -1469565163 ) ) do
             Citizen.Wait( 1 )
         end
         -- loup
@@ -478,7 +532,11 @@ function openchien ()
         SetPedNeverLeavesGroup(ped, true)               
         SetPedCanBeTargetted(ped, false)          
         SetEntityAsMissionEntity(ped, true,true)    
-        status = math.random(40, 90)      
+        status = math.random(40, 90)    
+		Wait(5)
+		attached()
+		Wait(5)
+		detached()		
     end)
 end
  
@@ -492,7 +550,7 @@ Citizen.CreateThread(function()
         if status == 0 then
             TriggerServerEvent('eden_animal:dead')
             DeleteEntity(ped)
-            ESX.showNotification(_U('pet_dead'))
+            ESX.ShowNotification(_U('pet_dead'))
             come = 3
             status = "die"
         end
@@ -536,6 +594,21 @@ Citizen.CreateThread(function()
 						buy_animal()
 					end	
 			end
+		if CurrentAction ~= nil then
+
+			SetTextComponentFormat('STRING')
+			AddTextComponentString(CurrentActionMsg)
+			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
+
+			if IsControlPressed(0,  Keys['E']) and (GetGameTimer() - GUI.Time) > 150 then
+
+					if CurrentAction == 'remove_entity' then
+						DeleteEntity(CurrentActionData.entity)
+					end
+					CurrentAction = nil
+					GUI.Time      = GetGameTimer()
+			end
+		end
 	end
 end)
 --function
@@ -551,7 +624,6 @@ function buy_animal()
     local elements = {}
     table.insert(elements, {label = _U('dog') .. '- <span style="color:green;">$50000</span>',             					value = "chien",	price = 50000})		
     table.insert(elements, {label = _U('cat') .. '- <span style="color:green;">$15000</span>',             					value = "chat", price = 15000})
-    table.insert(elements, {label = _U('monkey') .. '- <span style="color:green;">$8000</span>',             					value = "singe", price = 8000})
     table.insert(elements, {label = _U('wolf') .. '- <span style="color:green;">$30000</span>',             					value = "loup", price = 30000})
     table.insert(elements, {label = _U('bunny') .. '- <span style="color:green;">$25000</span>',             					value = "lapin",	price = 25000})
     table.insert(elements, {label = _U('husky') .. '- <span style="color:green;">$35000</span>',             					value = "husky", price = 35000})
@@ -576,3 +648,7 @@ function buy_animal()
 
     end)
 end
+
+
+-- Bal
+
