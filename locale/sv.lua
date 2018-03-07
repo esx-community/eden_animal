@@ -1,4 +1,4 @@
-Locales['en'] = {
+Locales['sv'] = {
   ['hunger'] = 'Hunger :',
   ['givefood'] = 'Ge mat',
   ['attachpet'] = 'Fäst eller ta lös ditt husdjur',
