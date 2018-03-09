@@ -1,5 +1,5 @@
-Config                          = {}
-Config.Locale = 'fr'
+Config        = {}
+Config.Locale = 'sv'
 Config.Zones = {
   PetShop = {
     Pos   = {x = 562.19805908203,y = 2741.3090820313,z = 41.868915557861 },

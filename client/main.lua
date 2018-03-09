@@ -36,26 +36,18 @@ local animation = {}
  
 function OpenAnimal()
  
-    local elements = {
-           
-           
-        }
+    local elements = {}
  
         if come == 1 then
             table.insert(elements, {label = _U('hunger') .. status .. '%', value = nil})
             table.insert(elements, {label = _U('givefood'), value = 'graille'})
             table.insert(elements, {label = _U('attachpet'), value = 'attached_animal'})
-            if isInVehicle then
-            table.insert(elements, {label = _U('getpeddown'), value = 'vehicules'})
-            else
-            table.insert(elements, {label = _U('getpedinside'), value = 'vehicules'})
+			if isInVehicle then
+				table.insert(elements, {label = _U('getpeddown'), value = 'vehicules'})
+			else
+				table.insert(elements, {label = _U('getpedinside'), value = 'vehicules'})
             end
-           
-               
 			table.insert(elements, {label = _U('giveorders'), value = 'ordres'})
-				
-
- 
         else
             table.insert(elements, {label = _U('callpet'), value = 'come_animal'})
         end
@@ -67,9 +59,8 @@ function OpenAnimal()
         'default', GetCurrentResourceName(), 'eden_animal',
         {
             title    = _U('pet_management'),
-            align    = 'top-left',
+            align    = 'bottom-right',
             elements = elements,
-           
         },
        
         function(data, menu)
@@ -234,48 +225,42 @@ local object = {}
 
 local inanimation = false
 function ordres()
- ESX.TriggerServerCallback('eden_animal:animalname', function(data)
-    local elements = {     
-        }
- 
-        if not inanimation then
-		 if model ~= 1462895032 then
-			table.insert(elements, {label = _U('balle'), value = 'balle'})
-		end
+	ESX.TriggerServerCallback('eden_animal:animalname', function(data)
+		local elements = {}
+		
+		if not inanimation then
+			if model ~= 1462895032 then
+				table.insert(elements, {label = _U('balle'), value = 'balle'})
+			end
 			table.insert(elements, {label = _U('pied'), value = 'pied'})
 			table.insert(elements, {label = _U('doghouse'), value = 'niche'})
-
-
 			if (data == "chien") then
-
-					table.insert(elements, {label = _U('sitdown'), value = 'assis'})
-					table.insert(elements, {label = _U('getdown'), value = 'coucher'})
+				table.insert(elements, {label = _U('sitdown'), value = 'assis'})
+				table.insert(elements, {label = _U('getdown'), value = 'coucher'})
 			end
 			if (data == "chat") then
-					table.insert(elements, {label = _U('getdown'), value = 'coucher2'})
-			end			
+				table.insert(elements, {label = _U('getdown'), value = 'coucher2'})
+			end
 			if (data == "loup") then
 					table.insert(elements, {label = _U('getdown'), value = 'coucher3'})
-			end							
+			end
 			if (data == "carlin") then
-					table.insert(elements, {label = _U('sitdown'), value = 'assis2'})	
+				table.insert(elements, {label = _U('sitdown'), value = 'assis2'})	
 			end
 			if (data == "retriever") then
-					table.insert(elements, {label = _U('sitdown'), value = 'assis3'})	
+				table.insert(elements, {label = _U('sitdown'), value = 'assis3'})	
 			end
-				else   
-					table.insert(elements, {label = _U('getup'), value = 'debout'})
-        end
-         
- 
-       
+		else
+			table.insert(elements, {label = _U('getup'), value = 'debout'})
+		end
+
     ESX.UI.Menu.CloseAll()
  
     ESX.UI.Menu.Open(
         'default', GetCurrentResourceName(), 'ordres',
         {
             title    = _U('pet_orders'),
-            align    = 'top-left',
+            align    = 'bottom-right',
             elements = elements,
            
         },
@@ -560,7 +545,7 @@ end)
 -- Key Controls
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(0)
+        Citizen.Wait(10)
 		if IsControlPressed(0, Keys['F7']) and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'eden_animal') and (GetGameTimer() - GUI.Time) > 150 then
             OpenAnimal()
             GUI.Time = GetGameTimer()
@@ -586,13 +571,13 @@ Citizen.CreateThread(function()
 
 Citizen.CreateThread(function()
 	while true do
-		Wait(0)
+		Citizen.Wait(10)
 			local coord = GetEntityCoords(GetPlayerPed(-1), true)
 			if GetDistanceBetweenCoords(coord, Config.Zones.PetShop.Pos.x,Config.Zones.PetShop.Pos.y,Config.Zones.PetShop.Pos.z, false) < 5 then
-					DisplayHelpText(_U('enterkey'))
-					if IsControlJustPressed(0, Keys['E'])  then
-						buy_animal()
-					end	
+				DisplayHelpText(_U('enterkey'))
+				if IsControlJustPressed(0, Keys['E']) then
+					buy_animal()
+				end
 			end
 		if CurrentAction ~= nil then
 
@@ -638,7 +623,7 @@ function buy_animal()
     'default', GetCurrentResourceName(), 'animalerie',
     {
         title    = _U('pet_shop2'),
-        align 	 = 'top-left',
+        align 	 = 'bottom-right',
         elements = elements
     },
     function(data, menu)
@@ -648,7 +633,3 @@ function buy_animal()
 
     end)
 end
-
-
--- Bal
-
