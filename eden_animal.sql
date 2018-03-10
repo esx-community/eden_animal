@@ -3,7 +3,7 @@ USE `essentialmode`;
 
 INSERT INTO `shops` (name, item, price) VALUES
 
-	('LTDgasoline','croquettes',1000)
+	('LTDgasoline','croquettes',100)
 ;
 
 INSERT INTO `items` (name, label) VALUES 
