@@ -545,8 +545,8 @@ end)
 -- Key Controls
 Citizen.CreateThread(function()
     while true do
-        Citizen.Wait(10)
-		if IsControlPressed(0, Keys['F7']) and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'eden_animal') and (GetGameTimer() - GUI.Time) > 150 then
+        Citizen.Wait(25)
+		if IsControlPressed(0, Keys['F9']) and GetLastInputMethod(2) and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'eden_animal') and (GetGameTimer() - GUI.Time) > 150 then
             OpenAnimal()
             GUI.Time = GetGameTimer()
         end
