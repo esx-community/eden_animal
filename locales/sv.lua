@@ -40,9 +40,9 @@
   ['doghouse'] = 'Säg åt din hund att gå in i hundkojan',
   ['buy_croquette'] = 'Du har köpt hundmat ~g~',
   ['buy_croquettec'] = 'Köp hundmat',
-  ['balle'] = 'Fetch the ball',
-  ['pied'] = 'Go at my feet',
-  ['noball'] = 'No balls',
+  ['balle'] = 'Hämta bollen',
+  ['pied'] = 'Kom till mina fötter',
+  ['noball'] = 'Inga bollar att kasta',
   -- Blip name
   ['pet_shop'] = 'Djuraffär',
 }
