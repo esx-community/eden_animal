@@ -2,13 +2,13 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-ESX.RegisterServerCallback("eden_animal:animalname", function(source, cb)
+ESX.RegisterServerCallback('eden_animal:animalname', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
 	{
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
-		cb(result[1].animal)
+		cb(result[1].pet)
 	end)
 end)
 
@@ -17,7 +17,7 @@ AddEventHandler("eden_animal:dead", function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
-	MySQL.Async.execute('UPDATE users SET animal = "(NULL)" WHERE identifier = @identifier',
+	MySQL.Async.execute('UPDATE users SET pet = "(NULL)" WHERE identifier = @identifier',
 	{
 		['@identifier'] = xPlayer.identifier
 	})
@@ -36,7 +36,7 @@ ESX.RegisterServerCallback('eden_animal:buyPet', function(source, cb, animalname
 
 	if xPlayer.get('money') >= price then
 		xPlayer.removeMoney(price)
-		MySQL.Async.execute('UPDATE users SET animal = @animalname WHERE identifier = @identifier',
+		MySQL.Async.execute('UPDATE users SET pet = @animalname WHERE identifier = @identifier',
 		{
 			['@identifier']    = xPlayer.identifier,
 			['@animalname']    = animalname

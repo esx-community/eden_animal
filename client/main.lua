@@ -11,10 +11,10 @@ local Keys = {
 }
 
 -- internal variables
-ESX              = nil
+ESX = nil
 local PlayerData = {}
-local GUI        = {}
-GUI.Time         = 0
+local GUI  = {}
+GUI.Time = 0
 local ped = {}
 local model = {}
 local status = 100
@@ -26,7 +26,7 @@ local come = 0
 local isAttached = false
 local animation = {}
 local getball = false
-local loadPetsOnSpawn = true -- needs research
+local loadPetsOnSpawn = true
 
 Citizen.CreateThread(function()
 	while ESX == nil do
@@ -46,7 +46,7 @@ function OpenAnimal()
 		else
 			table.insert(elements, {label = _U('getpedinside'), value = 'vehicules'})
 		end
-		table.insert(elements, {label = _U('giveorders'), value = 'ordres'})
+		table.insert(elements, {label = _U('giveorders'), value = 'give_orders'})
 	else
 		table.insert(elements, {label = _U('callpet'), value = 'come_animal'})
 	end
@@ -121,9 +121,8 @@ function OpenAnimal()
 				else
 				ESX.ShowNotification(_U('dontattachhiminacar'))
 			end
-		elseif data.current.value == 'ordres' then
-			ordres()
-			menu.close()
+		elseif data.current.value == 'give_orders' then
+			GivePetOrders()
 		elseif data.current.value == 'graille' then
 			local inventory = ESX.GetPlayerData().inventory
 			local coords1   = GetEntityCoords(GetPlayerPed(-1))
@@ -201,7 +200,7 @@ function OpenAnimal()
 	end)
 end
 
-function ordres()
+function GivePetOrders()
 	local elements = {}
 	ESX.TriggerServerCallback('eden_animal:animalname', function(animalName)
 		if not inanimation then
@@ -231,9 +230,7 @@ function ordres()
 		end
 	end)
 
-	ESX.UI.Menu.CloseAll()
-
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'ordres',
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_orders',
 	{
 		title    = _U('pet_orders'),
 		align    = 'bottom-right',
@@ -479,18 +476,18 @@ function OpenPetShop()
 	ESX.UI.Menu.Open(
 	'default', GetCurrentResourceName(), 'pet_shop',
 	{
-		title    = _U('pet_shop2'),
+		title    = _U('pet_shop'),
 		align 	 = 'bottom-right',
 		elements = {
 			{label = _U('dog') .. ' - <span style="color:green;">$50000</span>', value = "chien", price = 50000},
 			{label = _U('cat') .. ' - <span style="color:green;">$15000</span>', value = "chat", price = 15000},
-			{label = _U('bunny') .. ' - <span style="color:green;">$25000</span>', value = "lapin",	price = 25000}
-			{label = _U('husky') .. ' - <span style="color:green;">$35000</span>', value = "husky", price = 35000}
-			{label = _U('pig') .. ' - <span style="color:green;">$10000</span>', value = "cochon", price = 10000}
-			{label = _U('poodle') .. ' - <span style="color:green;">$50000</span>', value = "caniche", price = 50000}
-			{label = _U('pug') .. ' - <span style="color:green;">$10000</span>', value = "carlin", price = 5000}
-			{label = _U('retriever') .. ' - <span style="color:green;">$10000</span>', value = "retriever", price = 10000}
-			{label = _U('asatian') .. ' - <span style="color:green;">$55000</span>', value = "berger", price = 55000}
+			{label = _U('bunny') .. ' - <span style="color:green;">$25000</span>', value = "lapin",	price = 25000},
+			{label = _U('husky') .. ' - <span style="color:green;">$35000</span>', value = "husky", price = 35000},
+			{label = _U('pig') .. ' - <span style="color:green;">$10000</span>', value = "cochon", price = 10000},
+			{label = _U('poodle') .. ' - <span style="color:green;">$50000</span>', value = "caniche", price = 50000},
+			{label = _U('pug') .. ' - <span style="color:green;">$10000</span>', value = "carlin", price = 5000},
+			{label = _U('retriever') .. ' - <span style="color:green;">$10000</span>', value = "retriever", price = 10000},
+			{label = _U('asatian') .. ' - <span style="color:green;">$55000</span>', value = "berger", price = 55000},
 			{label = _U('westie') .. ' - <span style="color:green;">$50000</span>', value = "westie", price = 50000}
 		}
 	}, function(data, menu)
@@ -499,10 +496,11 @@ function OpenPetShop()
 				menu.close()
 			end
 		end, data.current.value, data.current.price)
+	end, function(data, menu)
+		menu.close()
 	end)
 end
 
-RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerData = xPlayer
 
