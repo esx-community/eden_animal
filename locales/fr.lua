@@ -32,7 +32,6 @@ Locales['fr'] = {
   ['retriever'] = 'Retriever',
   ['asatian'] = 'Berger allemand',
   ['westie'] = 'Westie',
-  ['pet_shop2'] = 'Animalerie',
   ['you_bought'] = 'Vous venez d\'acheter un %s pour ~g~$%s~s~',
   ['your_poor'] = 'Vous n\'avez pas assez d\'argent',
   ['doghouse'] = 'Mettre dans la niche',
@@ -41,6 +40,5 @@ Locales['fr'] = {
   ['balle'] = 'Aller chercher la balle',
   ['pied'] = 'Venir au pied',
   ['noball'] = 'Y\'a pas de balles',
-  -- BLIP NAME
   ['pet_shop'] = 'Animalerie',
 }

@@ -32,13 +32,11 @@ Locales['en'] = {
   ['retriever'] = 'Retriever',
   ['asatian'] = 'Alsatian dog',
   ['westie'] = 'Westie',
-  ['pet_shop2'] = 'pet shop',
   ['you_bought'] = 'you just bought a %s for ~g~$%s~s~',
   ['your_poor'] = 'you dont have enough money!',
   ['doghouse'] = 'Tell your ped to go in the doghouse',
   ['balle'] = 'Fetch the ball',
   ['pied'] = 'Go at my feet',
   ['noball'] = 'No balls',
-  -- Blip name
-  ['pet_shop'] = 'Pet shop',
+  ['pet_shop'] = 'pet shop',
 }

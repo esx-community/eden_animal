@@ -33,13 +33,11 @@
   ['retriever'] = 'Retriever',
   ['asatian'] = 'Alsatian hund',
   ['westie'] = 'Westie',
-  ['pet_shop2'] = 'Djuraffär',
   ['you_bought'] = 'Du köpte precis en %s för ~g~$%s~s~',
   ['your_poor'] = 'du har inte råd!',
   ['doghouse'] = 'Säg åt din hund att gå in i hundkojan',
   ['balle'] = 'hämta bollen',
   ['pied'] = 'kom till mina fötter',
   ['noball'] = 'inga bollar att kasta',
-  -- Blip name
   ['pet_shop'] = 'djuraffär',
 }
