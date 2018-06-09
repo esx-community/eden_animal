@@ -37,9 +37,9 @@
   ['you_bought'] = 'Du köpte precis en %s för ~g~$%s~s~',
   ['your_poor'] = 'du har inte råd!',
   ['doghouse'] = 'Säg åt din hund att gå in i hundkojan',
-  ['balle'] = 'Fetch the ball',
-  ['pied'] = 'Go at my feet',
-  ['noball'] = 'No balls',
+  ['balle'] = 'hämta bollen',
+  ['pied'] = 'kom till mina fötter',
+  ['noball'] = 'inga bollar att kasta',
   -- Blip name
   ['pet_shop'] = 'djuraffär',
 }
