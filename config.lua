@@ -1,5 +1,5 @@
 Config        = {}
-Config.Locale = 'sv'
+Config.Locale = 'en'
 
 Config.Zones = {
 	PetShop = {
