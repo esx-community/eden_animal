@@ -264,51 +264,33 @@ function GivePetOrders()
 			end
 			menu.close()
 		elseif data.current.value == 'assis' then -- [chien ]
-			RequestAnimDict('creatures@rottweiler@amb@world_dog_sitting@base')
-			while not HasAnimDictLoaded('creatures@rottweiler@amb@world_dog_sitting@base') do
-				Citizen.Wait(0)
-			end
-			TaskPlayAnim( ped, 'creatures@rottweiler@amb@world_dog_sitting@base', 'base' ,8.0, -8, -1, 1, 0, false, false, false )
+			Stream.RequestAnimSet('creatures@rottweiler@amb@world_dog_sitting@base')
+			TaskPlayAnim(ped, 'creatures@rottweiler@amb@world_dog_sitting@base', 'base' ,8.0, -8, -1, 1, 0, false, false, false)
 			inanimation = true
 			menu.close()
 		elseif data.current.value == 'coucher' then -- [chien ]
-			RequestAnimDict('creatures@rottweiler@amb@sleep_in_kennel@')
-			while not HasAnimDictLoaded('creatures@rottweiler@amb@sleep_in_kennel@') do
-				Citizen.Wait(0)
-			end
-			TaskPlayAnim( ped, 'creatures@rottweiler@amb@sleep_in_kennel@', 'sleep_in_kennel' ,8.0, -8, -1, 1, 0, false, false, false )
+			Stream.RequestAnimSet('creatures@rottweiler@amb@sleep_in_kennel@')
+			TaskPlayAnim(ped, 'creatures@rottweiler@amb@sleep_in_kennel@', 'sleep_in_kennel' ,8.0, -8, -1, 1, 0, false, false, false)
 			inanimation = true
 			menu.close()
 		elseif data.current.value == 'coucher2' then -- [chat ]
-			RequestAnimDict('creatures@cat@amb@world_cat_sleeping_ground@idle_a')
-			while not HasAnimDictLoaded('creatures@cat@amb@world_cat_sleeping_ground@idle_a') do
-				Citizen.Wait(0)
-			end
-			TaskPlayAnim( ped, 'creatures@cat@amb@world_cat_sleeping_ground@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false )
+			Stream.RequestAnimSet('creatures@cat@amb@world_cat_sleeping_ground@idle_a')
+			TaskPlayAnim(ped, 'creatures@cat@amb@world_cat_sleeping_ground@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false)
 			inanimation = true
 			menu.close()
 		elseif data.current.value == 'coucher3' then -- [loup ]
-			RequestAnimDict('creatures@coyote@amb@world_coyote_rest@idle_a')
-			while not HasAnimDictLoaded('creatures@coyote@amb@world_coyote_rest@idle_a') do
-				Citizen.Wait(0)
-			end
-			TaskPlayAnim( ped, 'creatures@coyote@amb@world_coyote_rest@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false )
+			Stream.RequestAnimSet('creatures@coyote@amb@world_coyote_rest@idle_a')
+			TaskPlayAnim(ped, 'creatures@coyote@amb@world_coyote_rest@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false)
 			inanimation = true
 			menu.close()
 		elseif data.current.value == 'assis2' then -- [carlin ]
-			RequestAnimDict('creatures@carlin@amb@world_dog_sitting@idle_a')
-			while not HasAnimDictLoaded('creatures@carlin@amb@world_dog_sitting@idle_a') do
-				Citizen.Wait(0)
-			end
-			TaskPlayAnim( ped, 'creatures@carlin@amb@world_dog_sitting@idle_a', 'idle_b' ,8.0, -8, -1, 1, 0, false, false, false )
+			Stream.RequestAnimSet('creatures@carlin@amb@world_dog_sitting@idle_a')
+			TaskPlayAnim(ped, 'creatures@carlin@amb@world_dog_sitting@idle_a', 'idle_b' ,8.0, -8, -1, 1, 0, false, false, false)
 			inanimation = true
 			menu.close()
 		elseif data.current.value == 'assis3' then -- [retriever ]
-			RequestAnimDict('creatures@retriever@amb@world_dog_sitting@idle_a')
-			while not HasAnimDictLoaded('creatures@retriever@amb@world_dog_sitting@idle_a') do
-				Citizen.Wait(0)
-			end
-			TaskPlayAnim( ped, 'creatures@retriever@amb@world_dog_sitting@idle_a', 'idle_c' ,8.0, -8, -1, 1, 0, false, false, false )
+			Stream.RequestAnimSet('creatures@retriever@amb@world_dog_sitting@idle_a')
+			TaskPlayAnim(ped, 'creatures@retriever@amb@world_dog_sitting@idle_a', 'idle_c' ,8.0, -8, -1, 1, 0, false, false, false)
 			inanimation = true
 			menu.close()
 		elseif data.current.value == 'debout' then
@@ -505,60 +487,30 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	PlayerData = xPlayer
 
 	if loadPetsOnSpawn then
-		-- chien
-		RequestModel(-1788665315)
-		while not HasModelLoaded(-1788665315) do
-			Citizen.Wait(1)
-		end
-		-- chat
-		RequestModel(1462895032)
-		while not HasModelLoaded(1462895032) do
-			Citizen.Wait(1)
-		end
-		-- loup
-		RequestModel(1682622302)
-		while not HasModelLoaded(1682622302) do
-			Citizen.Wait(1)
-		end
-		-- lapin
-		RequestModel(-541762431)
-		while not HasModelLoaded(-541762431) do
-			Citizen.Wait(1)
-		end
-		-- husky
-		RequestModel(1318032802)
-		while not HasModelLoaded(1318032802) do
-			Citizen.Wait(1)
-		end
-		-- cochon
-		RequestModel(-1323586730)
-		while not HasModelLoaded(-1323586730) do
-			Citizen.Wait(1)
-		end
-		-- caniche
-		RequestModel(1125994524)
-		while not HasModelLoaded(1125994524) do
-			Citizen.Wait(1)
-		end
-		-- carlin
-		RequestModel(1832265812)
-		while not HasModelLoaded(1832265812) do
-			Citizen.Wait(1)
-		end
-		-- retriever
-		RequestModel(882848737)
-		while not HasModelLoaded(882848737) do
-			Citizen.Wait(1)
-		end
-		-- berger
-		RequestModel( 1126154828 )
-		while not HasModelLoaded(1126154828) do
-			Citizen.Wait(1)
-		end
-		-- westie
-		RequestModel(-1384627013)
-		while not HasModelLoaded(-1384627013) do
-			Citizen.Wait(1)
-		end
+		Stream.RequestModel(-1788665315) -- chien
+		Stream.RequestModel(1462895032) -- chat
+		Stream.RequestModel(1682622302) -- loup
+		Stream.RequestModel(-541762431) -- lapin
+		Stream.RequestModel(1318032802) -- husky
+		Stream.RequestModel(-1323586730) -- cochon
+		Stream.RequestModel(1125994524) -- caniche
+		Stream.RequestModel(1832265812) -- carlin
+		Stream.RequestModel(882848737) -- retriever
+		Stream.RequestModel(1126154828) -- berger
+		Stream.RequestModel(-1384627013) -- westie
 	end
 end)
+
+function Stream.RequestModel(model)
+	RequestModel(model)
+	while not HasModelLoaded(model) do
+		Citizen.Wait(1)
+	end
+end
+
+function Stream.RequestAnimSet(anim)
+	RequestAnimDict(anim)
+	while not HasAnimDictLoaded(anim) do
+		Citizen.Wait(1)
+	end
+end
