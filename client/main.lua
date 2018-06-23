@@ -12,7 +12,6 @@ local Keys = {
 
 -- internal variables
 ESX = nil
-local PlayerData = {}
 local GUI  = {}
 GUI.Time = 0
 local ped = {}
@@ -26,16 +25,28 @@ local come = 0
 local isAttached = false
 local animation = {}
 local getball = false
-local loadPetsOnSpawn = true
 
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+
+	Citizen.Wait(5000)
+	DoRequestModel(-1788665315) -- chien
+	DoRequestModel(1462895032) -- chat
+	DoRequestModel(1682622302) -- loup
+	DoRequestModel(-541762431) -- lapin
+	DoRequestModel(1318032802) -- husky
+	DoRequestModel(-1323586730) -- cochon
+	DoRequestModel(1125994524) -- caniche
+	DoRequestModel(1832265812) -- carlin
+	DoRequestModel(882848737) -- retriever
+	DoRequestModel(1126154828) -- berger
+	DoRequestModel(-1384627013) -- westie
 end)
 
-function OpenAnimal()
+function OpenPetMenu()
 	local elements = {}
 	if come == 1 then
 		table.insert(elements, {label = _U('hunger') .. status .. '%', value = nil})
@@ -59,7 +70,7 @@ function OpenAnimal()
 		elements = elements,
 	}, function(data, menu)
 		if data.current.value == 'come_animal' and come == 0 then
-			ESX.TriggerServerCallback('eden_animal:animalname', function(animalName)
+			ESX.TriggerServerCallback('eden_animal:getPet', function(animalName)
 				if animalName == "chien" then
 					model = -1788665315
 					come = 1
@@ -140,7 +151,7 @@ function OpenAnimal()
 					if status < 100 then
 						status = status + math.random(2, 15)
 						ESX.ShowNotification(_U('gavepetfood'))
-						TriggerServerEvent('eden_animal:startHarvest')
+						TriggerServerEvent('eden_animal:consumePetFood')
 						if status > 100 then
 							status = 100
 						end
@@ -201,105 +212,104 @@ function OpenAnimal()
 end
 
 function GivePetOrders()
-	local elements = {}
-	ESX.TriggerServerCallback('eden_animal:animalname', function(animalName)
+	ESX.TriggerServerCallback('eden_animal:getPet', function(pet)
+		local elements = {}
 		if not inanimation then
-			if model ~= 1462895032 then
+			if pet ~= "chat" then
 				table.insert(elements, {label = _U('balle'), value = 'balle'})
 			end
+
 			table.insert(elements, {label = _U('pied'), value = 'pied'})
 			table.insert(elements, {label = _U('doghouse'), value = 'niche'})
-			if animalName == "chien" then
+
+			if pet == "chien" then
 				table.insert(elements, {label = _U('sitdown'), value = 'assis'})
 				table.insert(elements, {label = _U('getdown'), value = 'coucher'})
-			end
-			if animalName == "chat" then
+			elseif pet == "chat" then
 				table.insert(elements, {label = _U('getdown'), value = 'coucher2'})
-			end
-			if animalName == "loup" then
+			elseif pet == "loup" then
 				table.insert(elements, {label = _U('getdown'), value = 'coucher3'})
-			end
-			if animalName == "carlin" then
+			elseif pet == "carlin" then
 				table.insert(elements, {label = _U('sitdown'), value = 'assis2'})
-			end
-			if animalName == "retriever" then
+			elseif pet == "retriever" then
 				table.insert(elements, {label = _U('sitdown'), value = 'assis3'})
 			end
 		else
 			table.insert(elements, {label = _U('getup'), value = 'debout'})
 		end
-	end)
+		
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_orders',
-	{
-		title    = _U('pet_orders'),
-		align    = 'bottom-right',
-		elements = elements,
-	}, function(data, menu)
-		if data.current.value == 'niche' then
-			local GroupHandle = GetPlayerGroup(PlayerId())
-			local coords    = GetEntityCoords(GetPlayerPed(-1))
-			SetGroupSeparationRange(GroupHandle, 1.9)
-			SetPedNeverLeavesGroup(ped, false)
-			TaskGoToCoordAnyMeans(ped, coords.x+40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
-			Citizen.Wait(5000)
-			DeleteEntity(ped)
-			come = 0
-			menu.close()
-		elseif data.current.value == 'pied' then
-			local coords1 = GetEntityCoords(GetPlayerPed(-1))
-			TaskGoToCoordAnyMeans(ped, coords1.x, coords1.y, coords1.z, 5.0, 0, 0, 786603, 0xbf800000)
-			menu.close()
-		elseif data.current.value == 'balle' then
-			object = GetClosestObjectOfType(GetEntityCoords(ped).x, GetEntityCoords(ped).y, GetEntityCoords(ped).z, 190.0, GetHashKey('w_am_baseball'))
-			if DoesEntityExist(object) then
-				balle = true
-				objCoords = GetEntityCoords(object)
-				TaskGoToCoordAnyMeans(ped, objCoords.x, objCoords.y, objCoords.z, 5.0, 0, 0, 786603, 0xbf800000)
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_orders',
+		{
+			title    = _U('pet_orders'),
+			align    = 'bottom-right',
+			elements = elements,
+		}, function(data, menu)
+			if data.current.value == 'niche' then
 				local GroupHandle = GetPlayerGroup(PlayerId())
+				local coords      = GetEntityCoords(GetPlayerPed(-1))
 				SetGroupSeparationRange(GroupHandle, 1.9)
 				SetPedNeverLeavesGroup(ped, false)
-			else
-				ESX.ShowNotification(_U('noball'))
+				TaskGoToCoordAnyMeans(ped, coords.x+40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
+				Citizen.Wait(5000)
+				DeleteEntity(ped)
+				come = 0
+				menu.close()
+			elseif data.current.value == 'pied' then
+				local coords1 = GetEntityCoords(GetPlayerPed(-1))
+				TaskGoToCoordAnyMeans(ped, coords1.x, coords1.y, coords1.z, 5.0, 0, 0, 786603, 0xbf800000)
+				menu.close()
+			elseif data.current.value == 'balle' then
+				object = GetClosestObjectOfType(GetEntityCoords(ped).x, GetEntityCoords(ped).y, GetEntityCoords(ped).z, 190.0, GetHashKey('w_am_baseball'))
+				if DoesEntityExist(object) then
+					balle = true
+					objCoords = GetEntityCoords(object)
+					TaskGoToCoordAnyMeans(ped, objCoords.x, objCoords.y, objCoords.z, 5.0, 0, 0, 786603, 0xbf800000)
+					local GroupHandle = GetPlayerGroup(PlayerId())
+					SetGroupSeparationRange(GroupHandle, 1.9)
+					SetPedNeverLeavesGroup(ped, false)
+					menu.close()
+				else
+					ESX.ShowNotification(_U('noball'))
+				end
+			elseif data.current.value == 'assis' then -- [chien ]
+				DoRequestAnimSet('creatures@rottweiler@amb@world_dog_sitting@base')
+				TaskPlayAnim(ped, 'creatures@rottweiler@amb@world_dog_sitting@base', 'base' ,8.0, -8, -1, 1, 0, false, false, false)
+				inanimation = true
+				menu.close()
+			elseif data.current.value == 'coucher' then -- [chien ]
+				DoRequestAnimSet('creatures@rottweiler@amb@sleep_in_kennel@')
+				TaskPlayAnim(ped, 'creatures@rottweiler@amb@sleep_in_kennel@', 'sleep_in_kennel' ,8.0, -8, -1, 1, 0, false, false, false)
+				inanimation = true
+				menu.close()
+			elseif data.current.value == 'coucher2' then -- [chat ]
+				DoRequestAnimSet('creatures@cat@amb@world_cat_sleeping_ground@idle_a')
+				TaskPlayAnim(ped, 'creatures@cat@amb@world_cat_sleeping_ground@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false)
+				inanimation = true
+				menu.close()
+			elseif data.current.value == 'coucher3' then -- [loup ]
+				DoRequestAnimSet('creatures@coyote@amb@world_coyote_rest@idle_a')
+				TaskPlayAnim(ped, 'creatures@coyote@amb@world_coyote_rest@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false)
+				inanimation = true
+				menu.close()
+			elseif data.current.value == 'assis2' then -- [carlin ]
+				DoRequestAnimSet('creatures@carlin@amb@world_dog_sitting@idle_a')
+				TaskPlayAnim(ped, 'creatures@carlin@amb@world_dog_sitting@idle_a', 'idle_b' ,8.0, -8, -1, 1, 0, false, false, false)
+				inanimation = true
+				menu.close()
+			elseif data.current.value == 'assis3' then -- [retriever ]
+				DoRequestAnimSet('creatures@retriever@amb@world_dog_sitting@idle_a')
+				TaskPlayAnim(ped, 'creatures@retriever@amb@world_dog_sitting@idle_a', 'idle_c' ,8.0, -8, -1, 1, 0, false, false, false)
+				inanimation = true
+				menu.close()
+			elseif data.current.value == 'debout' then
+				ClearPedTasks(ped)
+				inanimation = false
+				menu.close()
 			end
+		end, function(data, menu)
 			menu.close()
-		elseif data.current.value == 'assis' then -- [chien ]
-			Stream.RequestAnimSet('creatures@rottweiler@amb@world_dog_sitting@base')
-			TaskPlayAnim(ped, 'creatures@rottweiler@amb@world_dog_sitting@base', 'base' ,8.0, -8, -1, 1, 0, false, false, false)
-			inanimation = true
-			menu.close()
-		elseif data.current.value == 'coucher' then -- [chien ]
-			Stream.RequestAnimSet('creatures@rottweiler@amb@sleep_in_kennel@')
-			TaskPlayAnim(ped, 'creatures@rottweiler@amb@sleep_in_kennel@', 'sleep_in_kennel' ,8.0, -8, -1, 1, 0, false, false, false)
-			inanimation = true
-			menu.close()
-		elseif data.current.value == 'coucher2' then -- [chat ]
-			Stream.RequestAnimSet('creatures@cat@amb@world_cat_sleeping_ground@idle_a')
-			TaskPlayAnim(ped, 'creatures@cat@amb@world_cat_sleeping_ground@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false)
-			inanimation = true
-			menu.close()
-		elseif data.current.value == 'coucher3' then -- [loup ]
-			Stream.RequestAnimSet('creatures@coyote@amb@world_coyote_rest@idle_a')
-			TaskPlayAnim(ped, 'creatures@coyote@amb@world_coyote_rest@idle_a', 'idle_a' ,8.0, -8, -1, 1, 0, false, false, false)
-			inanimation = true
-			menu.close()
-		elseif data.current.value == 'assis2' then -- [carlin ]
-			Stream.RequestAnimSet('creatures@carlin@amb@world_dog_sitting@idle_a')
-			TaskPlayAnim(ped, 'creatures@carlin@amb@world_dog_sitting@idle_a', 'idle_b' ,8.0, -8, -1, 1, 0, false, false, false)
-			inanimation = true
-			menu.close()
-		elseif data.current.value == 'assis3' then -- [retriever ]
-			Stream.RequestAnimSet('creatures@retriever@amb@world_dog_sitting@idle_a')
-			TaskPlayAnim(ped, 'creatures@retriever@amb@world_dog_sitting@idle_a', 'idle_c' ,8.0, -8, -1, 1, 0, false, false, false)
-			inanimation = true
-			menu.close()
-		elseif data.current.value == 'debout' then
-			ClearPedTasks(ped)
-			inanimation = false
-			menu.close()
-		end
-	end, function(data, menu)
-		menu.close()
+		end)
 	end)
 end
 
@@ -309,7 +319,7 @@ Citizen.CreateThread(function()
 		if balle then
 			local coords1 = GetEntityCoords(GetPlayerPed(-1))
 			local coords2 = GetEntityCoords(ped)
-			local distance = GetDistanceBetweenCoords(objCoords.x, objCoords.y, objCoords.z,coords2.x,coords2.y,coords2.z,true)
+			local distance  = GetDistanceBetweenCoords(objCoords.x, objCoords.y, objCoords.z,coords2.x,coords2.y,coords2.z,true)
 			local distance2 = GetDistanceBetweenCoords(coords1.x,coords1.y,coords1.z,coords2.x,coords2.y,coords2.z,true)
 
 			if distance < 0.5 then
@@ -363,13 +373,10 @@ function openchien()
 	local LastPosition = GetEntityCoords(GetPlayerPed(-1))
 	local GroupHandle = GetPlayerGroup(PlayerId())
 
-	RequestAnimDict('rcmnigel1c')
-	while not HasAnimDictLoaded('rcmnigel1c') do
-		Citizen.Wait(0)
-	end
+	DoRequestAnimSet('rcmnigel1c')
 
-	TaskPlayAnim( GetPlayerPed(-1), 'rcmnigel1c', 'hailing_whistle_waive_a' ,8.0, -8, -1, 120, 0, false, false, false )
-	SetTimeout(5000, function()
+	TaskPlayAnim(GetPlayerPed(-1), 'rcmnigel1c', 'hailing_whistle_waive_a' ,8.0, -8, -1, 120, 0, false, false, false)
+	Citizen.SetTimeout(5000, function()
 		ped = CreatePed(28, model, LastPosition.x +1, LastPosition.y +1, LastPosition.z -1, 1, 1)
 		SetPedAsGroupLeader(playerPed, GroupHandle)
 		SetPedAsGroupMember(ped, GroupHandle)
@@ -391,7 +398,7 @@ Citizen.CreateThread(function()
 			status = status - 1
 		end
 		if status == 0 then
-			TriggerServerEvent('eden_animal:dead')
+			TriggerServerEvent('eden_animal:petDied')
 			DeleteEntity(ped)
 			ESX.ShowNotification(_U('pet_dead'))
 			come = 3
@@ -404,9 +411,8 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
-		if IsControlPressed(0, Keys['F9']) and GetLastInputMethod(2) and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'pet_menu') and (GetGameTimer() - GUI.Time) > 150 then
-			OpenAnimal()
-			GUI.Time = GetGameTimer()
+		if IsControlJustPressed(0, Keys['F9']) and GetLastInputMethod(2) and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'pet_menu') then
+			OpenPetMenu()
 		end
 	end
 end)
@@ -428,21 +434,10 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
 		local coord = GetEntityCoords(GetPlayerPed(-1), true)
-		if GetDistanceBetweenCoords(coord, Config.Zones.PetShop.Pos.x,Config.Zones.PetShop.Pos.y,Config.Zones.PetShop.Pos.z, false) < 5 then
+		if GetDistanceBetweenCoords(coord, Config.Zones.PetShop.Pos.x, Config.Zones.PetShop.Pos.y, Config.Zones.PetShop.Pos.z, false) < 5 then
 			DisplayHelpText(_U('enterkey'))
 			if IsControlJustPressed(0, Keys['E']) then
 				OpenPetShop()
-			end
-		end
-		if CurrentAction ~= nil then
-			DisplayHelpText(CurrentActionMsg)
-
-			if IsControlPressed(0, Keys['E']) and (GetGameTimer() - GUI.Time) > 150 then
-				if CurrentAction == 'remove_entity' then
-					DeleteEntity(CurrentActionData.entity)
-				end
-				CurrentAction = nil
-				GUI.Time      = GetGameTimer()
 			end
 		end
 	end
@@ -483,32 +478,14 @@ function OpenPetShop()
 	end)
 end
 
-AddEventHandler('esx:playerLoaded', function(xPlayer)
-	PlayerData = xPlayer
-
-	if loadPetsOnSpawn then
-		Stream.RequestModel(-1788665315) -- chien
-		Stream.RequestModel(1462895032) -- chat
-		Stream.RequestModel(1682622302) -- loup
-		Stream.RequestModel(-541762431) -- lapin
-		Stream.RequestModel(1318032802) -- husky
-		Stream.RequestModel(-1323586730) -- cochon
-		Stream.RequestModel(1125994524) -- caniche
-		Stream.RequestModel(1832265812) -- carlin
-		Stream.RequestModel(882848737) -- retriever
-		Stream.RequestModel(1126154828) -- berger
-		Stream.RequestModel(-1384627013) -- westie
-	end
-end)
-
-function Stream.RequestModel(model)
+function DoRequestModel(model)
 	RequestModel(model)
 	while not HasModelLoaded(model) do
 		Citizen.Wait(1)
 	end
 end
 
-function Stream.RequestAnimSet(anim)
+function DoRequestAnimSet(anim)
 	RequestAnimDict(anim)
 	while not HasAnimDictLoaded(anim) do
 		Citizen.Wait(1)

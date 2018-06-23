@@ -2,7 +2,7 @@ ESX = nil
 
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-ESX.RegisterServerCallback('eden_animal:animalname', function(source, cb)
+ESX.RegisterServerCallback('eden_animal:getPet', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
 	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
 	{
@@ -12,8 +12,8 @@ ESX.RegisterServerCallback('eden_animal:animalname', function(source, cb)
 	end)
 end)
 
-RegisterServerEvent("eden_animal:dead")
-AddEventHandler("eden_animal:dead", function()
+RegisterServerEvent('eden_animal:petDied')
+AddEventHandler('eden_animal:petDied', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
@@ -23,25 +23,25 @@ AddEventHandler("eden_animal:dead", function()
 	})
 end)
 
-RegisterServerEvent('eden_animal:startHarvest')
-AddEventHandler('eden_animal:startHarvest', function()
+RegisterServerEvent('eden_animal:consumePetFood')
+AddEventHandler('eden_animal:consumePetFood', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
 	xPlayer.removeInventoryItem('croquettes', 1)
 end)
 
-ESX.RegisterServerCallback('eden_animal:buyPet', function(source, cb, animalname, price)
+ESX.RegisterServerCallback('eden_animal:buyPet', function(source, cb, pet, price)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
 	if xPlayer.get('money') >= price then
 		xPlayer.removeMoney(price)
-		MySQL.Async.execute('UPDATE users SET pet = @animalname WHERE identifier = @identifier',
+		MySQL.Async.execute('UPDATE users SET pet = @pet WHERE identifier = @identifier',
 		{
-			['@identifier']    = xPlayer.identifier,
-			['@animalname']    = animalname
+			['@identifier'] = xPlayer.identifier,
+			['@pet']        = pet
 		})
-		TriggerClientEvent('esx:showNotification', source, (_U('you_bought', animalname, price)))
+		TriggerClientEvent('esx:showNotification', source, (_U('you_bought', pet, price)))
 		cb(true)
 	else
 		TriggerClientEvent('esx:showNotification', source, _U('your_poor'))
