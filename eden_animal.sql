@@ -1,6 +1,6 @@
 USE `essentialmode`;
 
-INSERT INTO `shops` (`name`, `item`, `price`) VALUES
+INSERT INTO `shops` (`store`, `item`, `price`) VALUES
 	('LTDgasoline', 'croquettes', 100)
 ;
 

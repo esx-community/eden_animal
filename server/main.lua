@@ -8,7 +8,13 @@ ESX.RegisterServerCallback('eden_animal:getPet', function(source, cb)
 	{
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
-		cb(result[1].pet)
+		local userPets = result[1].pet
+
+		if userPets ~= nil then
+			cb(userPets)
+		else
+			cb('')
+		end
 	end)
 end)
 

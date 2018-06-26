@@ -32,6 +32,7 @@ Locales['en'] = {
   ['retriever'] = 'Retriever',
   ['asatian'] = 'Alsatian dog',
   ['westie'] = 'Westie',
+  ['rottweiler'] = 'rottweiler',
   ['you_bought'] = 'you just bought a %s for ~g~$%s~s~',
   ['your_poor'] = 'you dont have enough money!',
   ['doghouse'] = 'Tell your ped to go in the doghouse',

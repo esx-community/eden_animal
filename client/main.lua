@@ -12,8 +12,6 @@ local Keys = {
 
 -- internal variables
 ESX = nil
-local GUI  = {}
-GUI.Time = 0
 local ped = {}
 local model = {}
 local status = 100
@@ -44,6 +42,7 @@ Citizen.CreateThread(function()
 	DoRequestModel(882848737) -- retriever
 	DoRequestModel(1126154828) -- berger
 	DoRequestModel(-1384627013) -- westie
+	DoRequestModel(351016938)  -- rottweiler
 end)
 
 function OpenPetMenu()
@@ -53,9 +52,9 @@ function OpenPetMenu()
 		table.insert(elements, {label = _U('givefood'), value = 'graille'})
 		table.insert(elements, {label = _U('attachpet'), value = 'attached_animal'})
 		if isInVehicle then
-			table.insert(elements, {label = _U('getpeddown'), value = 'vehicules'})
+			table.insert(elements, {label = _U('getpeddown'), value = 'vehicle'})
 		else
-			table.insert(elements, {label = _U('getpedinside'), value = 'vehicules'})
+			table.insert(elements, {label = _U('getpedinside'), value = 'vehicle'})
 		end
 		table.insert(elements, {label = _U('giveorders'), value = 'give_orders'})
 	else
@@ -70,53 +69,56 @@ function OpenPetMenu()
 		elements = elements,
 	}, function(data, menu)
 		if data.current.value == 'come_animal' and come == 0 then
-			ESX.TriggerServerCallback('eden_animal:getPet', function(animalName)
-				if animalName == "chien" then
+			ESX.TriggerServerCallback('eden_animal:getPet', function(pet)
+				if pet == 'chien' then
 					model = -1788665315
 					come = 1
 					openchien()
-				elseif animalName == "chat" then
+				elseif pet == 'chat' then
 					model = 1462895032
 					come = 1
 					openchien()
-				elseif animalName == "loup" then
+				elseif pet == 'loup' then
 					model = 1682622302
 					come = 1
 					openchien()
-				elseif animalName == "lapin" then
+				elseif pet == 'lapin' then
 					model = -541762431
 					come = 1
 					openchien()
-				elseif animalName == "husky" then
+				elseif pet == 'husky' then
 					model = 1318032802
 					come = 1
 					openchien()
-				elseif animalName == "cochon" then
+				elseif pet == 'cochon' then
 					model = -1323586730
 					come = 1
 					openchien()
-				elseif animalName == "caniche" then
+				elseif pet == 'caniche' then
 					model = 1125994524
 					come = 1
 					openchien()
-				elseif animalName == "carlin" then
+				elseif pet == 'carlin' then
 					model = 1832265812
 					come = 1
 					openchien()
-				elseif animalName == "retriever" then
+				elseif pet == 'retriever' then
 					model = 882848737
 					come = 1
 					openchien()
-				elseif animalName == "berger" then
+				elseif pet == 'berger' then
 					model = 1126154828
 					come = 1
 					openchien()
-				elseif animalName == "westie" then
+				elseif pet == 'westie' then
 					model = -1384627013
 					come = 1
 					openchien()
+				elseif pet == 'rottweiler' then
+					model = 351016938
+					come = 1
 				else
-					print('eden_animal: unknown pet ' .. animalName)
+					print('eden_animal: unknown pet ' .. pet)
 				end
 			end)
 			menu.close()
@@ -165,7 +167,7 @@ function OpenPetMenu()
 			else
 				ESX.ShowNotification(_U('hestoofar'))
 			end
-		elseif data.current.value == 'vehicules' then
+		elseif data.current.value == 'vehicle' then
 			local coords   = GetEntityCoords(GetPlayerPed(-1))
 			local vehicle  = GetVehiclePedIsUsing(GetPlayerPed(-1))
 			local coords2  = GetEntityCoords(ped)
@@ -215,29 +217,30 @@ function GivePetOrders()
 	ESX.TriggerServerCallback('eden_animal:getPet', function(pet)
 		local elements = {}
 		if not inanimation then
-			if pet ~= "chat" then
+			if pet ~= 'chat' then
 				table.insert(elements, {label = _U('balle'), value = 'balle'})
 			end
 
-			table.insert(elements, {label = _U('pied'), value = 'pied'})
+			table.insert(elements, {label = _U('pied'),     value = 'pied'})
 			table.insert(elements, {label = _U('doghouse'), value = 'niche'})
 
-			if pet == "chien" then
+			if pet == 'chien' then
 				table.insert(elements, {label = _U('sitdown'), value = 'assis'})
 				table.insert(elements, {label = _U('getdown'), value = 'coucher'})
-			elseif pet == "chat" then
+			elseif pet == 'chat' then
 				table.insert(elements, {label = _U('getdown'), value = 'coucher2'})
-			elseif pet == "loup" then
+			elseif pet == 'loup' then
 				table.insert(elements, {label = _U('getdown'), value = 'coucher3'})
-			elseif pet == "carlin" then
+			elseif pet == 'carlin' then
 				table.insert(elements, {label = _U('sitdown'), value = 'assis2'})
-			elseif pet == "retriever" then
+			elseif pet == 'retriever' then
 				table.insert(elements, {label = _U('sitdown'), value = 'assis3'})
+			elseif pet == 'rottweiler' then
+				table.insert(elements, {label = _U('sitdown'), value = 'assis4'})
 			end
 		else
 			table.insert(elements, {label = _U('getup'), value = 'debout'})
 		end
-		
 
 		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_orders',
 		{
@@ -300,6 +303,11 @@ function GivePetOrders()
 			elseif data.current.value == 'assis3' then -- [retriever ]
 				DoRequestAnimSet('creatures@retriever@amb@world_dog_sitting@idle_a')
 				TaskPlayAnim(ped, 'creatures@retriever@amb@world_dog_sitting@idle_a', 'idle_c' ,8.0, -8, -1, 1, 0, false, false, false)
+				inanimation = true
+				menu.close()
+			elseif data.current.value == 'assis4' then -- [rottweiler ]
+				DoRequestAnimSet('creatures@rottweiler@amb@world_dog_sitting@idle_a')
+				TaskPlayAnim(ped, 'creatures@rottweiler@amb@world_dog_sitting@idle_a', 'idle_c' ,8.0, -8, -1, 1, 0, false, false, false)
 				inanimation = true
 				menu.close()
 			elseif data.current.value == 'debout' then
@@ -465,7 +473,8 @@ function OpenPetShop()
 			{label = _U('pug') .. ' - <span style="color:green;">$10000</span>', value = "carlin", price = 5000},
 			{label = _U('retriever') .. ' - <span style="color:green;">$10000</span>', value = "retriever", price = 10000},
 			{label = _U('asatian') .. ' - <span style="color:green;">$55000</span>', value = "berger", price = 55000},
-			{label = _U('westie') .. ' - <span style="color:green;">$50000</span>', value = "westie", price = 50000}
+			{label = _U('westie') .. ' - <span style="color:green;">$50000</span>', value = "westie", price = 50000},
+			{label = _U('chop') .. '- <span style="color:green;">$12000</span>', value = "chop", price = 12000}
 		}
 	}, function(data, menu)
 		ESX.TriggerServerCallback('eden_animal:buyPet', function(boughtPed)
