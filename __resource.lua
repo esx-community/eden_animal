@@ -5,8 +5,8 @@ description 'ESX Eden Animal'
 version '1.2.0'
 
 server_scripts {
-	'@es_extended/locale.lua',
 	'@mysql-async/lib/MySQL.lua',
+	'@es_extended/locale.lua',
 	'locales/fr.lua',
 	'locales/sv.lua',
 	'locales/en.lua',
