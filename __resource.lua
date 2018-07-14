@@ -1,20 +1,26 @@
 resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
 
-description 'eden_animal'
+description 'ESX Eden Animal'
+
+version '1.2.0'
+
+server_scripts {
+	'@mysql-async/lib/MySQL.lua',
+	'@es_extended/locale.lua',
+	'locales/fr.lua',
+	'locales/sv.lua',
+	'locales/en.lua',
+	'config.lua',
+	'server/main.lua'
+}
 
 client_scripts {
 	'@es_extended/locale.lua',
-	'locale/fr.lua',
-	'locale/en.lua',
+	'locales/fr.lua',
+	'locales/sv.lua',
+	'locales/en.lua',
 	'config.lua',
 	'client/main.lua'
 }
 
-server_scripts {
-	'@es_extended/locale.lua',
-	'@mysql-async/lib/MySQL.lua',
-	'locale/fr.lua',
-	'locale/en.lua',
-	'config.lua',
-	'server/main.lua'
-}
+dependency 'es_extended'
