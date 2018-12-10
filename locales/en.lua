@@ -40,4 +40,5 @@ Locales['en'] = {
   ['pied'] = 'go at my feet',
   ['noball'] = 'no balls',
   ['pet_shop'] = 'pet shop',
+  ['shop_item'] = '$%s',
 }

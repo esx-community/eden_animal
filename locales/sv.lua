@@ -40,4 +40,5 @@
   ['pied'] = 'kom till mina fötter',
   ['noball'] = 'du har inga bollar att kasta',
   ['pet_shop'] = 'djuraffär',
+  ['shop_item'] = '%s SEK',
 }

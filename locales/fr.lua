@@ -40,4 +40,5 @@ Locales['fr'] = {
   ['pied'] = 'venir au pied',
   ['noball'] = 'y\'a pas de balles',
   ['pet_shop'] = 'animalerie',
+  ['shop_item'] = '$%s',
 }
