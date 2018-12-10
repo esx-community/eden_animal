@@ -4,14 +4,12 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 ESX.RegisterServerCallback('eden_animal:getPet', function(source, cb)
 	local xPlayer = ESX.GetPlayerFromId(source)
-	MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
-	{
+
+	MySQL.Async.fetchAll('SELECT pet FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	}, function(result)
-		local userPets = result[1].pet
-
-		if userPets ~= nil then
-			cb(userPets)
+		if result[1].pet ~= nil then
+			cb(result[1].pet)
 		else
 			cb('')
 		end
@@ -23,8 +21,7 @@ AddEventHandler('eden_animal:petDied', function()
 	local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
 
-	MySQL.Async.execute('UPDATE users SET pet = "(NULL)" WHERE identifier = @identifier',
-	{
+	MySQL.Async.execute('UPDATE users SET pet = "(NULL)" WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier
 	})
 end)
@@ -40,15 +37,16 @@ end)
 ESX.RegisterServerCallback('eden_animal:buyPet', function(source, cb, pet, price)
 	local xPlayer = ESX.GetPlayerFromId(source)
 
-	if xPlayer.get('money') >= price then
+	if xPlayer.getMoney() >= price then
 		xPlayer.removeMoney(price)
-		MySQL.Async.execute('UPDATE users SET pet = @pet WHERE identifier = @identifier',
-		{
+
+		MySQL.Async.execute('UPDATE users SET pet = @pet WHERE identifier = @identifier', {
 			['@identifier'] = xPlayer.identifier,
-			['@pet']        = pet
-		})
-		TriggerClientEvent('esx:showNotification', source, (_U('you_bought', pet, price)))
-		cb(true)
+			['@pet'] = pet
+		}, function(rowsChanged)
+			TriggerClientEvent('esx:showNotification', source, _U('you_bought', pet, ESX.Math.GroupDigits(price)))
+			cb(true)
+		end)
 	else
 		TriggerClientEvent('esx:showNotification', source, _U('your_poor'))
 		cb(false)

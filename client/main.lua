@@ -48,25 +48,29 @@ end)
 function OpenPetMenu()
 	local elements = {}
 	if come == 1 then
-		table.insert(elements, {label = _U('hunger') .. status .. '%', value = nil})
+
+		table.insert(elements, {label = _U('hunger', status), value = nil})
 		table.insert(elements, {label = _U('givefood'), value = 'graille'})
 		table.insert(elements, {label = _U('attachpet'), value = 'attached_animal'})
+
 		if isInVehicle then
 			table.insert(elements, {label = _U('getpeddown'), value = 'vehicle'})
 		else
 			table.insert(elements, {label = _U('getpedinside'), value = 'vehicle'})
 		end
+
 		table.insert(elements, {label = _U('giveorders'), value = 'give_orders'})
+
 	else
 		table.insert(elements, {label = _U('callpet'), value = 'come_animal'})
 	end
+
 	ESX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pet_menu',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pet_menu', {
 		title    = _U('pet_management'),
 		align    = 'bottom-right',
-		elements = elements,
+		elements = elements
 	}, function(data, menu)
 		if data.current.value == 'come_animal' and come == 0 then
 			ESX.TriggerServerCallback('eden_animal:getPet', function(pet)
@@ -138,9 +142,9 @@ function OpenPetMenu()
 			GivePetOrders()
 		elseif data.current.value == 'graille' then
 			local inventory = ESX.GetPlayerData().inventory
-			local coords1   = GetEntityCoords(GetPlayerPed(-1))
+			local coords1   = GetEntityCoords(PlayerPedId())
 			local coords2   = GetEntityCoords(ped)
-			local distance  = GetDistanceBetweenCoords(coords1.x,coords1.y,coords1.z,coords2.x,coords2.y,coords2.z,true)
+			local distance  = GetDistanceBetweenCoords(coords1, coords2, true)
 
 			local count = 0
 			for i=1, #inventory, 1 do
@@ -168,12 +172,14 @@ function OpenPetMenu()
 				ESX.ShowNotification(_U('hestoofar'))
 			end
 		elseif data.current.value == 'vehicle' then
-			local coords   = GetEntityCoords(GetPlayerPed(-1))
-			local vehicle  = GetVehiclePedIsUsing(GetPlayerPed(-1))
+			local playerPed = PlayerPedId()
+			local vehicle  = GetVehiclePedIsUsing(playerPed)
+			local coords   = GetEntityCoords(playerPed)
 			local coords2  = GetEntityCoords(ped)
-			local distance = GetDistanceBetweenCoords(coords.x,coords.y,coords.z,coords2.x,coords2.y,coords2.z,true)
+			local distance = GetDistanceBetweenCoords(coords, coords2, true)
+
 			if not isInVehicle then
-				if IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then
+				if IsPedSittingInAnyVehicle(playerPed) then
 					if distance < 8 then
 						attached()
 						Citizen.Wait(200)
@@ -197,8 +203,8 @@ function OpenPetMenu()
 					ESX.ShowNotification(_U('youneedtobeincar'))
 				end
 			else
-				if not IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then
-					SetEntityCoords(ped,coords.x, coords.y, coords.z,1,0,0,1)
+				if not IsPedSittingInAnyVehicle(playerPed) then
+					SetEntityCoords(ped, coords,1,0,0,1)
 					Citizen.Wait(100)
 					detached()
 					isInVehicle = false
@@ -216,6 +222,7 @@ end
 function GivePetOrders()
 	ESX.TriggerServerCallback('eden_animal:getPet', function(pet)
 		local elements = {}
+
 		if not inanimation then
 			if pet ~= 'chat' then
 				table.insert(elements, {label = _U('balle'), value = 'balle'})
@@ -242,32 +249,33 @@ function GivePetOrders()
 			table.insert(elements, {label = _U('getup'), value = 'debout'})
 		end
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_orders',
-		{
+		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_orders', {
 			title    = _U('pet_orders'),
 			align    = 'bottom-right',
-			elements = elements,
+			elements = elements
 		}, function(data, menu)
 			if data.current.value == 'niche' then
 				local GroupHandle = GetPlayerGroup(PlayerId())
-				local coords      = GetEntityCoords(GetPlayerPed(-1))
+				local coords      = GetEntityCoords(PlayerPedId())
 				SetGroupSeparationRange(GroupHandle, 1.9)
 				SetPedNeverLeavesGroup(ped, false)
-				TaskGoToCoordAnyMeans(ped, coords.x+40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
+				TaskGoToCoordAnyMeans(ped, coords.x + 40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
 				Citizen.Wait(5000)
 				DeleteEntity(ped)
 				come = 0
 				menu.close()
 			elseif data.current.value == 'pied' then
-				local coords1 = GetEntityCoords(GetPlayerPed(-1))
-				TaskGoToCoordAnyMeans(ped, coords1.x, coords1.y, coords1.z, 5.0, 0, 0, 786603, 0xbf800000)
+				local coords = GetEntityCoords(PlayerPedId())
+				TaskGoToCoordAnyMeans(ped, coords, 5.0, 0, 0, 786603, 0xbf800000)
 				menu.close()
 			elseif data.current.value == 'balle' then
-				object = GetClosestObjectOfType(GetEntityCoords(ped).x, GetEntityCoords(ped).y, GetEntityCoords(ped).z, 190.0, GetHashKey('w_am_baseball'))
+				local pedCoords = GetEntityCoords(ped)
+				object = GetClosestObjectOfType(pedCoords, 190.0, GetHashKey('w_am_baseball'))
+
 				if DoesEntityExist(object) then
 					balle = true
 					objCoords = GetEntityCoords(object)
-					TaskGoToCoordAnyMeans(ped, objCoords.x, objCoords.y, objCoords.z, 5.0, 0, 0, 786603, 0xbf800000)
+					TaskGoToCoordAnyMeans(ped, objCoords, 5.0, 0, 0, 786603, 0xbf800000)
 					local GroupHandle = GetPlayerGroup(PlayerId())
 					SetGroupSeparationRange(GroupHandle, 1.9)
 					SetPedNeverLeavesGroup(ped, false)
@@ -324,31 +332,33 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(30)
+
 		if balle then
-			local coords1 = GetEntityCoords(GetPlayerPed(-1))
+			local coords1 = GetEntityCoords(PlayerPedId())
 			local coords2 = GetEntityCoords(ped)
-			local distance  = GetDistanceBetweenCoords(objCoords.x, objCoords.y, objCoords.z,coords2.x,coords2.y,coords2.z,true)
-			local distance2 = GetDistanceBetweenCoords(coords1.x,coords1.y,coords1.z,coords2.x,coords2.y,coords2.z,true)
+			local distance  = GetDistanceBetweenCoords(objCoords, coords2, true)
+			local distance2 = GetDistanceBetweenCoords(coords1, coords2, true)
 
 			if distance < 0.5 then
-				AttachEntityToEntity(object, ped, GetPedBoneIndex(ped, 17188), 0.120, 0.010, 0.010, 5.0, 150.0, 0.0, true, true, false, true, 1, true)
-				TaskGoToCoordAnyMeans(ped, coords1.x, coords1.y, coords1.z, 5.0, 0, 0, 786603, 0xbf800000)
+				local boneIndex = GetPedBoneIndex(ped, 17188)
+				AttachEntityToEntity(object, ped, boneIndex, 0.120, 0.010, 0.010, 5.0, 150.0, 0.0, true, true, false, true, 1, true)
+				TaskGoToCoordAnyMeans(ped, coords1, 5.0, 0, 0, 786603, 0xbf800000)
 				balle = false
 				getball = true
 			end
 		end
 
 		if getball then
-			local coords1 = GetEntityCoords(GetPlayerPed(-1))
+			local coords1 = GetEntityCoords(PlayerPedId())
 			local coords2 = GetEntityCoords(ped)
-			local distance2 = GetDistanceBetweenCoords(coords1.x,coords1.y,coords1.z,coords2.x,coords2.y,coords2.z,true)
+			local distance2 = GetDistanceBetweenCoords(coords1, coords2, true)
 
 			if distance2 < 1.5 then
 				DetachEntity(object,false,false)
 				Citizen.Wait(50)
 				SetEntityAsMissionEntity(object)
 				DeleteEntity(object)
-				GiveWeaponToPed(GetPlayerPed(-1), GetHashKey("WEAPON_BALL"), 1, false, true)
+				GiveWeaponToPed(PlayerPedId(), GetHashKey("WEAPON_BALL"), 1, false, true)
 				local GroupHandle = GetPlayerGroup(PlayerId())
 				SetGroupSeparationRange(GroupHandle, 999999.9)
 				SetPedNeverLeavesGroup(ped, true)
@@ -360,7 +370,6 @@ Citizen.CreateThread(function()
 end)
 
 function attached()
-	local playerPed = GetPlayerPed(-1)
 	local GroupHandle = GetPlayerGroup(PlayerId())
 	SetGroupSeparationRange(GroupHandle, 1.9)
 	SetPedNeverLeavesGroup(ped, false)
@@ -368,7 +377,6 @@ function attached()
 end
 
 function detached()
-	local playerPed = GetPlayerPed(-1)
 	local GroupHandle = GetPlayerGroup(PlayerId())
 	SetGroupSeparationRange(GroupHandle, 999999.9)
 	SetPedNeverLeavesGroup(ped, true)
@@ -377,20 +385,23 @@ function detached()
 end
 
 function openchien()
-	local playerPed = GetPlayerPed(-1)
-	local LastPosition = GetEntityCoords(GetPlayerPed(-1))
+	local playerPed = PlayerPedId()
+	local LastPosition = GetEntityCoords(playerPed)
 	local GroupHandle = GetPlayerGroup(PlayerId())
 
 	DoRequestAnimSet('rcmnigel1c')
 
-	TaskPlayAnim(GetPlayerPed(-1), 'rcmnigel1c', 'hailing_whistle_waive_a' ,8.0, -8, -1, 120, 0, false, false, false)
+	TaskPlayAnim(playerPed, 'rcmnigel1c', 'hailing_whistle_waive_a' ,8.0, -8, -1, 120, 0, false, false, false)
+
 	Citizen.SetTimeout(5000, function()
 		ped = CreatePed(28, model, LastPosition.x +1, LastPosition.y +1, LastPosition.z -1, 1, 1)
+
 		SetPedAsGroupLeader(playerPed, GroupHandle)
 		SetPedAsGroupMember(ped, GroupHandle)
 		SetPedNeverLeavesGroup(ped, true)
 		SetPedCanBeTargetted(ped, false)
 		SetEntityAsMissionEntity(ped, true,true)
+
 		status = math.random(40, 90)
 		Citizen.Wait(5)
 		attached()
@@ -402,9 +413,11 @@ end
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(math.random(60000, 120000))
+
 		if come == 1 then
 			status = status - 1
 		end
+
 		if status == 0 then
 			TriggerServerEvent('eden_animal:petDied')
 			DeleteEntity(ped)
@@ -419,6 +432,7 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
+
 		if IsControlJustPressed(0, Keys['F9']) and GetLastInputMethod(2) and not ESX.UI.Menu.IsOpen('default', GetCurrentResourceName(), 'pet_menu') then
 			OpenPetMenu()
 		end
@@ -433,6 +447,7 @@ Citizen.CreateThread(function()
 	SetBlipDisplay(blip, Config.Zones.PetShop.Display)
 	SetBlipScale  (blip, Config.Zones.PetShop.Scale)
 	SetBlipAsShortRange(blip, true)
+
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString(_U('pet_shop'))
 	EndTextCommandSetBlipName(blip)
@@ -441,26 +456,22 @@ end)
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(10)
-		local coord = GetEntityCoords(GetPlayerPed(-1), true)
-		if GetDistanceBetweenCoords(coord, Config.Zones.PetShop.Pos.x, Config.Zones.PetShop.Pos.y, Config.Zones.PetShop.Pos.z, false) < 5 then
-			DisplayHelpText(_U('enterkey'))
-			if IsControlJustPressed(0, Keys['E']) then
+		local coord = GetEntityCoords(PlayerPedId())
+
+		if GetDistanceBetweenCoords(coord, Config.Zones.PetShop.Pos.x, Config.Zones.PetShop.Pos.y, Config.Zones.PetShop.Pos.z, true) < 2 then
+			ESX.ShowHelpNotification(_U('enterkey'))
+
+			if IsControlJustReleased(0, Keys['E']) then
 				OpenPetShop()
 			end
+		else
+			Citizen.Wait(500)
 		end
 	end
 end)
 
-function DisplayHelpText(str)
-	SetTextComponentFormat("STRING")
-	AddTextComponentString(str)
-	DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-end
-
 function OpenPetShop()
-	ESX.UI.Menu.Open(
-	'default', GetCurrentResourceName(), 'pet_shop',
-	{
+	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'pet_shop', {
 		title    = _U('pet_shop'),
 		align 	 = 'bottom-right',
 		elements = {
