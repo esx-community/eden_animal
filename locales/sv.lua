@@ -1,5 +1,5 @@
  Locales['sv'] = {
-  ['hunger'] = 'hunger: %s%',
+  ['hunger'] = 'hunger: %s',
   ['givefood'] = 'ge mat',
   ['attachpet'] = 'koppla husdjur',
   ['getpeddown'] = 'säg åt ditt husdjur att hoppa ur bilen',
@@ -33,12 +33,14 @@
   ['asatian'] = 'alsatian hund',
   ['westie'] = 'westie',
   ['rottweiler'] = 'rottweiler',
+  ['chop'] = 'chop',
   ['you_bought'] = 'du köpte precis en %s för ~g~%s SEK~s~',
   ['your_poor'] = 'du har inte råd!',
-  ['doghouse'] = 'säg åt din hund att gå in i hundkojan',
+  ['doghouse'] = 'berätta ditt husdjur att gå hem',
+  ['doghouse_returning'] = 'ditt husdjur återvänder hemmåt',
   ['balle'] = 'fånga boll',
   ['pied'] = 'kom till mina fötter',
-  ['noball'] = 'du har inga bollar att kasta',
+  ['noball'] = 'du har inga ~b~bollar~s~ att kasta',
   ['pet_shop'] = 'djuraffär',
   ['shop_item'] = '%s SEK',
 }

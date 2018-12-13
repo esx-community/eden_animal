@@ -1,5 +1,5 @@
 Locales['fr'] = {
-  ['hunger'] = 'taux de faim: %s%',
+  ['hunger'] = 'taux de faim: %s',
   ['givefood'] = 'donner de la nourriture',
   ['attachpet'] = 'attacher / détacher votre animal',
   ['getpeddown'] = 'faire descendre votre animal dans le véhicule',
@@ -33,12 +33,14 @@ Locales['fr'] = {
   ['asatian'] = 'berger allemand',
   ['westie'] = 'westie',
   ['rottweiler'] = 'rottweiler',
+  ['chop'] = 'chop',
   ['you_bought'] = 'vous venez d\'acheter un %s pour ~g~$%s~s~',
   ['your_poor'] = 'vous n\'avez pas assez d\'argent',
   ['doghouse'] = 'mettre dans la niche',
+  ['doghouse_returning'] = 'your pet is returning home',
   ['balle'] = 'aller chercher la balle',
   ['pied'] = 'venir au pied',
-  ['noball'] = 'y\'a pas de balles',
+  ['noball'] = 'y\'a pas de ~b~balles~s~',
   ['pet_shop'] = 'animalerie',
   ['shop_item'] = '$%s',
 }

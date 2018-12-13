@@ -229,7 +229,7 @@ function GivePetOrders()
 			end
 
 			table.insert(elements, {label = _U('pied'),     value = 'pied'})
-			table.insert(elements, {label = _U('doghouse'), value = 'niche'})
+			table.insert(elements, {label = _U('doghouse'), value = 'return_doghouse'})
 
 			if pet == 'chien' then
 				table.insert(elements, {label = _U('sitdown'), value = 'assis'})
@@ -254,16 +254,21 @@ function GivePetOrders()
 			align    = 'bottom-right',
 			elements = elements
 		}, function(data, menu)
-			if data.current.value == 'niche' then
+			if data.current.value == 'return_doghouse' then
 				local GroupHandle = GetPlayerGroup(PlayerId())
 				local coords      = GetEntityCoords(PlayerPedId())
+
+				ESX.ShowNotification(_U('doghouse_returning'))
+
 				SetGroupSeparationRange(GroupHandle, 1.9)
 				SetPedNeverLeavesGroup(ped, false)
 				TaskGoToCoordAnyMeans(ped, coords.x + 40, coords.y, coords.z, 5.0, 0, 0, 786603, 0xbf800000)
+
 				Citizen.Wait(5000)
 				DeleteEntity(ped)
 				come = 0
-				menu.close()
+
+				ESX.UI.Menu.CloseAll()
 			elseif data.current.value == 'pied' then
 				local coords = GetEntityCoords(PlayerPedId())
 				TaskGoToCoordAnyMeans(ped, coords, 5.0, 0, 0, 786603, 0xbf800000)
